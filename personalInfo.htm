@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<head>
+	<meta name="keywords" content="天时;天机;命理;社会趋势;预测;测算;八字;皇极经世;紫微斗数;紫微;四柱;寿星天文历;万年历;农历;农历计算;算法;天文算法;伊斯兰历;回历;节气;交节时刻;日食;月食;地方食;行星历" name=keywords>
+	<meta charset="UTF-8" http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="your description">
+	<meta name="author" content="author,email address">
+	<meta name="robots" content="index,follow">
+	<meta name="renderer" content="ie-stand">
+
+	<title id="ThisTitle">八字命例管理</title>
+
+		<!--	定义几种常用的显css风格	-->
+		<link rel="stylesheet" href="./css/personalInfo_pg.css" />
+
+
+		<!--	需要调用的javascript文件	-->
+		<script src=./JS/md5.min.js></script> <!--	MD5功能庫	-->
+		<script src=./JS/dbOption.js></script> <!--	命例数据库管理	-->
+
+
+
+		<!--	定义几种常用的显css风格	-->
+	<link rel="stylesheet" href="./css/generalStyle.css" />
+	<style>
+
+	</style>
+
+</head>
+
+<body  class="headStyle">
+
+	<div id=PI_InfoInputDiv class="PI_InfoInputDivCSS">
+		<button onclick='PI_AddDestiny(1)'>新增命例</button>
+		命例ID：<input id=PI_DestinyID type=text size=35  onchange="">
+		<button onclick='PI_DestinyInfoRenew()'>命例信息刷新</button>
+		<button onclick='PI_DestinyInfoClear()'>信息清空</button>
+		<button onclick='PI_DestinyID.value=md5(String(Math.random()*100000),String(Math.random()*90000));return false'>MD5</button>
+		<button onclick=''>新增事件</button><br>
+		<input id=PI_GenderChk type=checkbox onchange="" checked>男/女&nbsp;
+		姓氏：<input id=PI_LastName type=text size=2  onchange="">
+		中間名：<input id=PI_MidName type=text size=3  onchange="">
+		名字：<input id=PI_FristName type=text size=3  onchange="">
+		字號別名：<textarea id=PI_MyNameMemo rows="1" cols="10" onchange=""> </textarea>
+		事件：<select id=PI_EventList	onchange="PI_()">
+			<option value=1 selected>未定事件</option>
+			<option value=2>出生事件</option>
+			<option value=3>婚姻事件</option>
+			<option value=4>子女事件</option>
+			<option value=5>職業事件</option>
+			<option value=6>學習學歷</option>
+			<option value=7>疾病意外</option>
+			<option value=8>家庭相關</option>
+			<option value=9>死亡事件</option>
+			<option value=10>其他3</option>
+			<option value=11>臨時</option>
+			<option value=12>1</option>
+		</select>&nbsp;
+		曆法：<select id=PI_CalendarType	onchange="">
+			<option value=1 selected>陽曆</option>
+			<option value=2>農曆</option>
+			<option value=3>其他</option>
+		</select>&nbsp;
+		<p>
+			日期：<input id=PI_EventTime type=text size=14 value='+199305121030.00' onchange="PI_ThisPanDataTimeChange()" >
+			<input id=PI_PregnantWeeksText type=text size=2 value='39.5' onchange="PI_PregnantWeeksTextChange()">孕周
+			事件經度:&nbsp;<input id=PI_LongSelText type=text size=2 value="120.00"  onchange="PI_LongSelTextChange()" >&nbsp;
+			緯度:&nbsp;<input id=PI_LatSelText type=text size=2 value="34.656" onchange="PI_LatSelTextChange()" >&nbsp;
+			時區:&nbsp;<input id=PI_TimeZoneText type=text size=2 value="8.001" onchange="PI_TimeZoneTextChange()" >&nbsp;
+			<input id=PI_DSTChk type=checkbox checked>非/夏令时
+			<input id=PI_LLRunMonth type=checkbox checked>非/閏月 / 事件描述：
+			<textarea id=PI_EventMemo  rows="2" cols="20"   value='' onchange="" ></textarea>
+		</p>
+		<p>
+			出生地：<textarea id=PI_Birthplace  rows="2" cols="10"   value='' onchange="" ></textarea>
+			身材相貌：<textarea id=PI_Appearance  rows="2" cols="10"   value='' onchange="" ></textarea>
+			其他：<textarea id=PI_OtherInfo  rows="2" cols="10"   value='' onchange="" ></textarea>
+		</p>
+		<p>
+			家庭歷史：<textarea  id=PI_Family rows="2" cols="10"  onchange=""></textarea>
+			家庭備註：<textarea  id=PI_FamilyMemo rows="2" cols="10"  onchange=""></textarea>
+			子女：<textarea  id=PI_Children rows="2" cols="10"  onchange=""></textarea>
+			子女備註：<textarea id=PI_ChildrenMemo rows="2" cols="10"  onchange=""></textarea>
+		</p>
+		<p>
+			教育經歷：<textarea  id=PI_Education rows="2" cols="10"  onchange=""></textarea>
+			教育備註：<textarea  id=PI_EducationMemo rows="2" cols="10"  onchange=""></textarea>
+			職業職稱：<textarea  id=PI_Career rows="2" cols="10" onchange=""></textarea>
+			職業備註：<textarea  id=PI_CareerMemo rows="2" cols="10" onchange=""></textarea>
+		</p>
+		<p>
+			社會關係：<textarea  id=PI_SocialRelations rows="2" cols="10" onchange=""></textarea>
+			關係備註：<textarea  id=PI_SocialRelationsMemo rows="2" cols="10" onchange=""></textarea>
+			社會能力：<textarea  id=PI_SocialEnergy rows="2" cols="10" onchange=""></textarea>
+			能力備註：<textarea  id=PI_SocialEnergyMemo rows="2" cols="10" onchange=""></textarea>
+		</p>
+		<p>命例類別：
+			<select id=PI_Classify	onchange="PI_ClassifySelChange()">
+				<option value=1 selected>全部顯示</option>
+				<option value=2>個人私密</option>
+				<option value=3>歷史名人</option>
+				<option value=4>社會名人</option>
+				<option value=5>學習案例</option>
+				<option value=6>客戶</option>
+				<option value=7>朋友同事</option>
+				<option value=8>其他1</option>
+				<option value=9>其他2</option>
+				<option value=10>其他3</option>
+				<option value=11>臨時</option>
+				<option value=12>1</option>
+			</select>&nbsp;
+		</p>
+
+		<p>人際關係：
+			<select id=PI_Relationships	onchange="PI_ClassifySelChange()">
+				<option value=1 selected>父母</option>
+				<option value=2>夫妻</option>
+				<option value=3>子女</option>
+				<option value=4>兄弟姐妹</option>
+				<option value=5>親屬</option>
+				<option value=6>朋友同事</option>
+				<option value=7>師長貴人</option>
+				<option value=8>合作關係</option>
+				<option value=9>其他2</option>
+				<option value=10>其他3</option>
+				<option value=11>臨時</option>
+				<option value=12>1</option>
+			</select>&nbsp;
+			對方命例ID：<input id=PI_DestinyID2 type=text size=35  onchange="">
+		</p>
+
+
+
+
+
+	</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<!--页面初始化需要运行的函数-->
+	<script id="">
+
+	</script>
+</body>
+
+</html>

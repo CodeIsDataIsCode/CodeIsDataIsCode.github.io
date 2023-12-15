@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<head>
+	<meta name="keywords" content="天时;天机;命理;社会趋势;预测;测算;八字;皇极经世;紫微斗数;紫微;四柱;寿星天文历;万年历;农历;农历计算;算法;天文算法;伊斯兰历;回历;节气;交节时刻;日食;月食;地方食;行星历" name=keywords>
+	<meta charset="UTF-8" http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="your description">
+	<meta name="author" content="author,email address">
+	<meta name="robots" content="index,follow">
+	<meta name="renderer" content="ie-stand">
+
+	<title id="ThisTitle">識天時窺天機-曆法工具</title>
+
+		<!--	定义几种常用的显css风格	-->
+	<link rel="stylesheet" href="./css/calendar_tools.css" />
+
+	
+		<!--	需要调用的javascript文件	-->
+		<script src=./JS/globalVar.js></script> <!--	全局变量表	-->
+		<script src=./JS/tools.js></script>	<!--	页面工具函数	-->
+		<script src=./JS/eph0.js></script>	<!--	天文常数等	-->
+		<script src=./JS/eph.js></script>	<!--	星历计算模块	-->
+		<script src=./JS/lunar_Fun.js></script>	<!--	日历物件、农历核心模块	-->
+		<script src=./JS/GEOInfo.js></script>	<!--	全国城市经纬数据库及皇帝纪年数据库	-->
+
+		<script src=./JS/yinYangSystemInfo.js></script><!--	阴阳五行系统相关函数	-->
+		<script src=./JS/sanYuanJiuYunInfo.js></script><!--	三元九运系统相关函数	-->
+	
+
+		<script src=./JS/calendar_tools_PGShow.js></script>	<!--	首頁顯示相關的	-->
+		
+
+</head>
+
+<body  class="headStyle">
+	<!--工具页面显示--><!--儒略日的计算-->
+	儒略日计算1：JD <input id=GJ1_jd type=text size=25 value="2299160.13456789123456">
+	<input type=button value="计算日期信息" onclick='JD2DateCalShow(GJ1_jd.value - 0)'>
+	<hr>
+	儒略日计算2：公元 <input id=GJ1_y type=text size=4 value=1582>年
+	<input id=GJ1_m type=text size=2 value=10 maxleng=2>月
+	<input id=GJ1_d type=text size=2 value=4>日
+	<input id=GJ1_t type=text size=8 value="13:01:01">
+	<input type=button value="转儒略日" onclick='Date2JDCalShow(0)'>
+	<input type=button value="减去上行" onclick='Date2JDCalShow(1)'>
+	<input type=button value="年内积日" onclick='Date2JDCalShow(2)'><br>
+	<hr>
+	儒略日计算3：公元 <input id=GJ1_y2 type=text size=4 value=2000>年
+	<input id=GJ1_m2 type=text size=2 value=1 maxleng=2>月
+	<input id=GJ1_d2 type=text size=2 value=1>日
+	<input id=GJ1_t2 type=text size=8 value="9:01:23">
+	<input type=button value="两行相减" onclick='Date2JDCalShow(3)'>
+	<hr>
+	<span id=GJ1_out style="font-size:16;color:red"></span>
+	<hr>
+
+	<table id=ToolsPGTB style="display:none">
+
+		<tr id="CalJD_Row">
+			<td class=dBot2>
+
+
+			</td>
+		</tr>
+
+		<tr id="CalPI_Row">
+			<td>-------------------------------------------------------------------------<br>
+				刘徽和祖冲之割圆法计算π：<br>
+				<input type=button value="6边C" onclick='GJ2_pi1(0)'>
+				<input type=button value="4边C" onclick='GJ2_pi1(1)'>
+				<input type=button value="6边S" onclick='GJ2_pi1(2)'>
+				<input type=button value="4边S" onclick='GJ2_pi1(3)'>
+				<input type=button value="6边快速" onclick='GJ2_pi1(4)'>
+				<input type=button value="4边快速" onclick='GJ2_pi1(5)'> &nbsp;
+				半径R：<input type=text id=GJ2_r size=15 value='1000000000'>&nbsp毫&nbsp;
+				<input type=button value="祖冲之" onclick='GJ2_pi2()'><br><br>
+				现代方法计算π：<br>
+				<input type=text id=GJ2_N size=12 maxlength=20 value='10000'>位
+				<input type=button value="现代低速算法" onclick='GJ2_pi()'>
+				<input type=button value="现代Machin公式" onclick='GJ2_machin.pi()'>
+				<input type=button value="清除计算结果" onclick='GJ2_cls()'><br><br>
+				<div id=GJ2_out></div>
+			</td>
+		</tr>
+	</table>
+
+
+</body>
+
+</html>

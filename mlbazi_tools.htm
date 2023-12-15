@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<head>
+	<meta name="keywords"
+		content="天时;天机;命理;社会趋势;预测;测算;八字;皇极经世;紫微斗数;紫微;四柱;寿星天文历;万年历;农历;农历计算;算法;天文算法;伊斯兰历;回历;节气;交节时刻;日食;月食;地方食;行星历"
+		name=keywords>
+	<meta charset="UTF-8" http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="your description">
+	<meta name="author" content="author,email address">
+	<meta name="robots" content="index,follow">
+	<meta name="renderer" content="ie-stand">
+
+	<title id="ThisTitle">識天時窺天機-八字工具</title>
+
+	<!--	定义几种常用的显css风格	-->
+	<link rel="stylesheet" href="./css/mlbazi_tools.css" />
+	<style>
+
+	</style>
+
+
+	<script src=./JS/globalVar.js></script>	<!--	全局变量表	-->
+	<script src=./JS/tools.js></script> <!--	页面工具函数	-->
+	<script src=./JS/eph0.js></script> <!--	天文常数等	-->
+	<script src=./JS/eph.js></script> <!--	星历计算模块	-->
+	<script src=./JS/lunar_Fun.js></script> <!--	日历物件、农历核心模块	-->
+	<script src=./JS/GEOInfo.js></script> <!--	全国城市经纬数据库及皇帝纪年数据库	-->
+
+	<script src=./JS/yinYangSystemInfo.js></script><!--	阴阳五行系统相关函数	-->
+	<script src=./JS/sanYuanJiuYunInfo.js></script><!--	三元九运系统相关函数	-->
+
+	<script src=./JS/mlbazi_Fun.js></script> <!--	首頁顯示相關的	-->
+	<script src=./JS/mlbazi_toolsShow.js></script> <!--	首頁顯示相關的	-->
+</head>
+
+<body class="headStyle">
+	<div  id="" style="align:center;">
+		<table id="">
+			<tr>
+				<td>年干</td>
+				<td>寅正月</td>
+				<td>卯二月</td>
+				<td>辰三月</td>
+				<td>巳四月</td>
+				<td>午五月</td>
+				<td>未六月</td>
+				<td>申七月</td>
+				<td>酉八月</td>
+				<td>戌九月</td>
+				<td>亥十月</td>
+				<td>子冬月</td>
+				<td>丑腊月</td>
+			</tr>
+			<tr>
+				<td>甲己</td>
+				<td>丙寅</td>
+				<td>丁卯</td>
+				<td>戊辰</td>
+				<td>己巳</td>
+				<td>庚午</td>
+				<td>辛未</td>
+				<td>壬申</td>
+				<td>癸酉</td>
+				<td>甲戌</td>
+				<td>乙亥</td>
+				<td>丙子</td>
+				<td>丁丑</td>
+			</tr>
+			<tr>
+				<td>乙庚</td>
+				<td>戊寅</td>
+				<td>己卯</td>
+				<td>庚辰</td>
+				<td>辛巳</td>
+				<td>壬午</td>
+				<td>癸未</td>
+				<td>甲申</td>
+				<td>乙酉</td>
+				<td>丙戌</td>
+				<td>丁亥</td>
+				<td>戊子</td>
+				<td>己丑</td>
+			</tr>
+			<tr>
+				<td>丙辛</td>
+				<td>庚寅</td>
+				<td>辛卯</td>
+				<td>壬辰</td>
+				<td>癸巳</td>
+				<td>甲午</td>
+				<td>乙未</td>
+				<td>丙申</td>
+				<td>丁酉</td>
+				<td>戊戌</td>
+				<td>己亥</td>
+				<td>庚子</td>
+				<td>辛丑</td>
+			</tr>
+			<tr>
+				<td>丁壬</td>
+				<td>壬寅</td>
+				<td>癸卯</td>
+				<td>甲辰</td>
+				<td>乙巳</td>
+				<td>丙午</td>
+				<td>丁未</td>
+				<td>戊申</td>
+				<td>己酉</td>
+				<td>庚戌</td>
+				<td>辛亥</td>
+				<td>壬子</td>
+				<td>癸丑</td>
+			</tr>
+			<tr>
+				<td>戊癸</td>
+				<td>甲寅</td>
+				<td>乙卯</td>
+				<td>丙辰</td>
+				<td>丁巳</td>
+				<td>戊午</td>
+				<td>己未</td>
+				<td>庚申</td>
+				<td>辛酉</td>
+				<td>壬戌</td>
+				<td>癸亥</td>
+				<td>甲子</td>
+				<td>乙丑</td>
+			</tr>
+		</table>
+	</div><hr>
+
+	<!--	通过八字反查日期信息 -->
+	<div class=dBot2>起止年:
+		<input type=text id="BaZiQueryStartYear" size="5" value="1800">~
+		<input type=text id="BaZiQueryEndYear" size="5" value="2050">&nbsp;
+		<select id=ML_BaZiQueryYearZhuGanSel class=tianGanSel onchange="ML_baZiQueryYearZhuGanSelChange();">
+			<option value=1 selected>甲</option>
+			<option value=2>乙</option>
+			<option value=3>丙</option>
+			<option value=4>丁</option>
+			<option value=5>戊</option>
+			<option value=6>己</option>
+			<option value=7>庚</option>
+			<option value=8>辛</option>
+			<option value=9>壬</option>
+			<option value=10>癸</option>
+		</select>
+		<select id=ML_BaZiQueryYearZhuZhiSel class="diZhiSel" onchange="ML_baZiQueryBaZiInfo();">
+			<option value=1 selected>子年</option>
+			<option value=3>寅年</option>
+			<option value=5>辰年</option>
+			<option value=7>午年</option>
+			<option value=9>申年</option>
+			<option value=11>戌年</option>
+		</select>&nbsp;/
+		<select id=ML_BaZiQueryMonthZhuZhiSel class="diZhiSel" onchange="ML_baZiQueryBaZiInfo();">
+			<option value=1 selected>子十一月</option>
+			<option value=2>丑十二月</option>
+			<option value=3>寅○正月</option>
+			<option value=4>卯○二月</option>
+			<option value=5>辰○三月</option>
+			<option value=6>巳○四月</option>
+			<option value=7>午○五月</option>
+			<option value=8>未○六月</option>
+			<option value=9>申○七月</option>
+			<option value=10>酉○八月</option>
+			<option value=11>戌○九月</option>
+			<option value=12>亥○十月</option>
+		</select>&nbsp;/
+		<select id=ML_BaZiQueryDayZhuGanSel class=tianGanSel onchange="ML_baZiQueryDayZhuGanSelChange();">
+			<option value=1 selected>甲</option>
+			<option value=2>乙</option>
+			<option value=3>丙</option>
+			<option value=4>丁</option>
+			<option value=5>戊</option>
+			<option value=6>己</option>
+			<option value=7>庚</option>
+			<option value=8>辛</option>
+			<option value=9>壬</option>
+			<option value=10>癸</option>
+		</select>
+		<select id=ML_BaZiQueryDayZhuZhiSel class="diZhiSel" onchange="ML_baZiQueryBaZiInfo();">
+			<option value=1 selected>子日</option>
+			<option value=3>寅日</option>
+			<option value=5>辰日</option>
+			<option value=7>午日</option>
+			<option value=9>申日</option>
+			<option value=11>戌日</option>
+		</select>&nbsp;/
+		<select id=ML_BaZiQueryTimeZhuZhiSel class="diZhiSel" onchange="ML_baZiQueryBaZiInfo();">
+			<option value=1>早子00-01</option>
+			<option value=2>丑时01-03</option>
+			<option value=3>寅时03-05</option>
+			<option value=4>卯时05-07</option>
+			<option value=5>辰时07-09</option>
+			<option value=6>巳时09-11</option>
+			<option value=7>午时11-13</option>
+			<option value=8>未时13-15</option>
+			<option value=9>申时15-17</option>
+			<option value=10>酉时17-19</option>
+			<option value=11>戌时19-21</option>
+			<option value=12>亥时21-23</option>
+			<option value=13>晚子23-00</option>
+		</select>
+		<input id=ML_BaZiQueryHemispheresSel type="checkbox" checked>北半球生/南半球生
+		<button onclick="ML_baZiQueryBaZiInfo();ML_baZiToDateInfoShow()">八字反查日期</button>
+		<button onclick="ML_baZiToDateInfoCls()">清空</button>
+		<br>
+	</div><br>
+
+	<!-- 八字反查日期結果顯示區域 -->
+	<div id=ML_BaZiQueryBaZiInfoOut>組合的四柱為：</div><hr>
+	<div id=ML_BaZiToDateInfoOutRow>
+		<span id=ML_BaZiToDateInfoOut>
+			<hr>
+		</span>
+	</div>
+
+</body>
+
+</html>

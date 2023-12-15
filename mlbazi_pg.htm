@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<head>
+	<meta charset="UTF-8" http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta name="keywords" content="天时;天机;命理;社会趋势;预测;测算;八字;皇极经世;紫微斗数;紫微;四柱;寿星天文历;万年历;农历;农历计算;算法;天文算法;伊斯兰历;回历;节气;交节时刻;日食;月食;地方食;行星历" name=keywords>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="your description">
+	<meta name="author" content="author,email address">
+	<meta name="robots" content="index,follow">
+	<meta name="renderer" content="ie-stand">
+
+	<title id="ThisTitle">識天時窺天機-八字排盤</title>
+
+		<!--	定义几种常用的显css风格	-->
+	<link rel="stylesheet" href="./css/mlbazi_pg.css" />
+	<style>
+
+	</style>
+	
+		<!--	需要调用的javascript文件	-->
+		<script src=./JS/globalVar.js></script> <!--	全局变量表	-->
+		<script src=./JS/tools.js></script>	<!--	页面工具函数	-->
+		<script src=./JS/eph0.js></script>	<!--	天文常数等	-->
+		<script src=./JS/eph.js></script>	<!--	星历计算模块	-->
+		<script src=./JS/lunar_Fun.js></script>	<!--	日历物件、农历核心模块	-->
+		<script src=./JS/GEOInfo.js></script>	<!--	全国城市经纬数据库及皇帝纪年数据库	-->
+
+		<script src=./JS/yinYangSystemInfo.js></script><!--	阴阳五行系统相关函数	-->
+		<script src=./JS/sanYuanJiuYunInfo.js></script><!--	三元九运系统相关函数	-->
+	
+		<script src=./JS/mlbazi_Fun.js></script>	<!--	首頁顯示相關的	-->
+		<script src=./JS/mlbazi_pgShow.js></script>	<!--	首頁顯示相關的	-->
+
+
+</head>
+
+<body  class="headStyle" onload="ML_BaZiPageInit()">
+
+	<div id=ML_BZ_InfoInputDiv class="ML_BZ_InfoInputDiv">
+		<input id=ML_ADFlagChk type=checkbox onchange="ML_ADFlagChkChange()">公元前/後
+		<input id=ML_ThisYearText type=text size=2 value=1995 onchange="ML_ThisYearTextChange()">年
+		<select id=ML_ThisYearSel onchange="ML_ThisYearSelChange()">
+			<option value=1 selected>2000年</option>
+			<option value=2>2001年</option>
+		</select>&nbsp;
+		<select id=ML_ThisMonthSel onchange="ML_ThisMonthSelChange()">
+			<option value=1>1月</option>
+			<option value=2>2月</option>
+			<option value=3>3月</option>
+			<option value=4>4月</option>
+			<option value=5>5月</option>
+			<option value=6>6月</option>
+			<option value=7 selected>7月</option>
+			<option value=8>8月</option>
+			<option value=9>9月</option>
+			<option value=10>10月</option>
+			<option value=11>11月</option>
+			<option value=12>12月</option>
+		</select>&nbsp;
+		<select id=ML_ThisDaySel onchange="ML_ThisDaySelChange()">
+			<option value=1>1日</option>
+			<option value=2>2日</option>
+			<option value=3>3日</option>
+			<option value=4>4日</option>
+			<option value=5>5日</option>
+			<option value=6>6日</option>
+			<option value=7>7日</option>
+			<option value=8>8日</option>
+			<option value=9>9日</option>
+			<option value=10>10日</option>
+			<option value=11>11日</option>
+			<option value=12>12日</option>
+			<option value=13>13日</option>
+			<option value=14>14日</option>
+			<option value=15>15日</option>
+			<option value=16>16日</option>
+			<option value=17>17日</option>
+			<option value=18>18日</option>
+			<option value=19>19日</option>
+			<option value=20>20日</option>
+			<option value=21>21日</option>
+			<option value=22>22日</option>
+			<option value=23>23日</option>
+			<option value=24>24日</option>
+			<option value=25>25日</option>
+			<option value=26>26日</option>
+			<option value=27>27日</option>
+			<option value=28>28日</option>
+			<option value=29>29日</option>
+			<option value=30 selected>30日</option>
+			<option value=31>31日</option>
+		</select>&nbsp;
+		<input id=ML_TimeInText type=text size=2 value='20:34' onchange="ML_TimeInTextChange()">	<!--	oninput="mlTimeInText()" 	-->
+		<select id='ML_LunarTime' onchange='ML_LunarTimeSelChange()'>
+			<option value=0>子时23-01</option>
+			<option value=2>丑时01-03</option>
+			<option value=4>寅时03-05</option>
+			<option value=6>卯时05-07</option>
+			<option value=8>辰时07-09</option>S
+			<option value=10>巳时09-11</option>
+			<option value=12>午时11-13</option>
+			<option value=14>未时13-15</option>
+			<option value=16>申时15-17</option>
+			<option value=18>酉时17-19</option>
+			<option value=20 selected>戌时19-21</option>
+			<option value=22>亥时21-23</option>
+		</select>
+
+		鎖定<input id=ML_PanDataTimeLock_Chk type=checkbox checked>
+		出生日期：<input id=ML_ThisPanDataTime type=text size=13 value='+199305121030.00' onchange="ML_ThisPanDataTimeChange()" >&nbsp;&nbsp;
+		<button onclick='ML_BaZiPageShow(1)'>确定</button>
+		<button onclick='ML_BaZiPageSetTime()'>此刻</button>
+		<button onclick='ML_BaZiPageRenew()'>页面刷新</button>
+		<br><hr>
+		<!--	经度纬度：河南洛陽的經緯度：112.308，為基準	-->
+		经度:&nbsp;<input id=ML_LongSelText type=text size=3 value="120.00"  onchange="ML_LongSelTextChange()" >&nbsp;
+		纬度:&nbsp;<input id=ML_LatSelText type=text size=3 value="34.656" onchange="ML_LatSelTextChange()" >&nbsp;
+		時區:&nbsp;<input id=ML_TimeZoneText type=text size=1 value="8.0001" onchange="ML_TimeZoneTextChange()" >&nbsp;
+		<input id=ML_DSTChk type=checkbox checked>非/夏令时
+		<input id=ML_GenderChk type=checkbox onchange="ML_GenderChkChange()" checked>男/女&nbsp;
+		<input id=ML_HemisphereChk type=checkbox onchange="ML_HemisphereChkChange()" checked>北/南半球&nbsp;
+		<input id=ML_PregnantWeeksText type=text size=2 value='39.5' onchange="ML_PregnantWeeksTextChange()">孕周
+		我干<select id=ML_ThisMeGanSel onchange="ML_ThisMeGanSelChange()">
+			<option value=-1 selected>同日干</option>
+			<option value=1>甲木</option>
+			<option value=2>乙木</option>
+			<option value=3>丙火</option>
+			<option value=4>丁火</option>
+			<option value=5>戊土</option>
+			<option value=6>己土</option>
+			<option value=7>庚金</option>
+			<option value=8>辛金</option>
+			<option value=9>壬水</option>
+			<option value=10>癸水</option>
+		</select>
+		<input id=ML_Pan_Liu_Chk type=checkbox onclick="ML_Pan_Liu_ChkChang()">查看本盤/流年：
+		<input id=ML_ThisLiuDataTime type=text size=13 value='+202306011200.00' onchange="ML_ThisLiuDataTimeChange()" >
+	</div><hr>
+
+	<div id=ML_DebugInfoOut  class="ML_BZ_InfoInputDiv">调试信息区</div><hr>
+	<div id=ML_BaZiDateInfoOut  class="ML_BZ_InfoInputDiv">日期信息区</div><hr>
+	<div id=ML_BaZiPanInfoOut  class="ML_BZ_InfoInputDiv">八字结构信息区</div>
+	<div id=ML_TianGanCommentInfoOut  class="ML_BZ_InfoInputDiv">天干評語信息：</div>
+	<div id=ML_TiaoHouYongShenInfoOut  class="ML_BZ_InfoInputDiv">《窮通寶鑒》調侯參考：</div><hr>
+
+	<table id=ML_BZ_PanTB class="">
+		<tr class="tbTdZhuName">
+			<td id="ML_BZTB_03_03">身</td>
+			<td id="ML_BZTB_03_04">命</td>
+			<td id="ML_BZTB_03_05">胎</td>
+			<td id="ML_BZTB_Empty1_1" class="tbTdMemo"></td>
+			<td id="ML_BZTB_03_06">1995</td>
+			<td id="ML_BZTB_03_07">5</td>
+			<td id="ML_BZTB_03_08" style="background:aqua;">5</td>
+			<td id="ML_BZTB_03_09">5:35</td>
+			<td id="ML_BZTB_Empty2_1">&nbsp;&nbsp;</td>
+			<td id="ML_BZTB_03_10">2运</td>
+			<td id="ML_BZTB_03_11">2003</td>
+			<td id="ML_BZTB_03_12">3</td>
+			<td id="ML_BZTB_03_13">3</td>
+			<td id="ML_BZTB_03_14">子时</td>
+		</tr>
+		<tr class="tbTdNaYin">
+			<td id="ML_BZTB_04_03">白臘金</td>
+			<td id="ML_BZTB_04_04">白臘金</td>
+			<td id="ML_BZTB_04_05">白臘金</td>
+			<td id="ML_BZTB_Empty1_2" class="tbTdMemo"></td>
+			<td id="ML_BZTB_04_06">白臘金</td>
+			<td id="ML_BZTB_04_07">白臘金</td>
+			<td id="ML_BZTB_04_08">白臘金</td>
+			<td id="ML_BZTB_04_09">白臘金</td>
+			<td id="ML_BZTB_Empty2_2"></td>
+			<td id="ML_BZTB_04_10">白臘金</td>
+			<td id="ML_BZTB_04_11">白臘金</td>
+			<td id="ML_BZTB_04_12">白臘金</td>
+			<td id="ML_BZTB_04_13">白臘金</td>
+			<td id="ML_BZTB_04_14">白臘金</td>
+		</tr>
+		<tr class="tbTdZhuNo">
+			<td id="ML_BZTB_05_03">1印</td>
+			<td id="ML_BZTB_05_04">1印</td>
+			<td id="ML_BZTB_05_05">1印</td>
+			<td id="ML_BZTB_Empty1_3" class="tbTdMemo">柱號</td>
+			<td id="ML_BZTB_05_06">1印</td>
+			<td id="ML_BZTB_05_07">1印</td>
+			<td id="ML_BZTB_05_08" style="background:aqua;">1男</td>
+			<td id="ML_BZTB_05_09">60印</td>
+			<td id="ML_BZTB_Empty2_3"></td>
+			<td id="ML_BZTB_05_10">58印</td>
+			<td id="ML_BZTB_05_11">32印</td>
+			<td id="ML_BZTB_05_12">23印</td>
+			<td id="ML_BZTB_05_13">27印</td>
+			<td id="ML_BZTB_05_14">29印</td>
+		</tr>
+		<tr class="tbTdTianGan">
+			<td id="ML_BZTB_06_03">甲</td>
+			<td id="ML_BZTB_06_04">甲</td>
+			<td id="ML_BZTB_06_05">甲</td>
+			<td id="ML_BZTB_Empty1_4" class="tbTdMemo">干</td>
+			<td id="ML_BZTB_06_06">甲</td>
+			<td id="ML_BZTB_06_07">丙</td>
+			<td id="ML_BZTB_06_08" style="background:aqua;">甲</td>
+			<td id="ML_BZTB_06_09">甲</td>
+			<td id="ML_BZTB_Empty2_4"></td>
+			<td id="ML_BZTB_06_10" onclick="ML_DaYunChang(1)">甲</td>
+			<td id="ML_BZTB_06_11">甲</td>
+			<td id="ML_BZTB_06_12">甲</td>
+			<td id="ML_BZTB_06_13">甲</td>
+			<td id="ML_BZTB_06_14">甲</td>
+		</tr>
+		<tr  class="tbTdDiZhi">
+			<td id="ML_BZTB_07_03">子</td>
+			<td id="ML_BZTB_07_04">子</td>
+			<td id="ML_BZTB_07_05">子</td>
+			<td id="ML_BZTB_Empty1_5" class="tbTdMemo">支</td>
+			<td id="ML_BZTB_07_06">子</td>
+			<td id="ML_BZTB_07_07">寅</td>
+			<td id="ML_BZTB_07_08">子</td>
+			<td id="ML_BZTB_07_09">子</td>
+			<td id="ML_BZTB_Empty2_5"></td>
+			<td id="ML_BZTB_07_10" onclick="ML_DaYunChang(-1)">子</td>
+			<td id="ML_BZTB_07_11">子</td>
+			<td id="ML_BZTB_07_12">子</td>
+			<td id="ML_BZTB_07_13">子</td>
+			<td id="ML_BZTB_07_14">子</td>
+		</tr>
+		<tr class="tbTdCangGan">
+			<td id="ML_BZTB_08_03">戊辛丁</td>
+			<td id="ML_BZTB_08_04">戊辛丁</td>
+			<td id="ML_BZTB_08_05">戊辛丁</td>
+			<td id="ML_BZTB_Empty1_6" class="tbTdMemo"></td>
+			<td id="ML_BZTB_08_06">戊辛丁</td>
+			<td id="ML_BZTB_08_07">戊辛丁</td>
+			<td id="ML_BZTB_08_08">戊辛丁</td>
+			<td id="ML_BZTB_08_09">戊辛丁</td>
+			<td id="ML_BZTB_Empty2_6"></td>
+			<td id="ML_BZTB_08_10">戊辛丁</td>
+			<td id="ML_BZTB_08_11">戊辛丁</td>
+			<td id="ML_BZTB_08_12">戊辛丁</td>
+			<td id="ML_BZTB_08_13">戊辛丁</td>
+			<td id="ML_BZTB_08_14">戊辛丁</td>
+		</tr>
+		<tr class="tbTdCangGanShen">
+			<td id="ML_BZTB_09_03">印财官</td>
+			<td id="ML_BZTB_09_04">印财官</td>
+			<td id="ML_BZTB_09_05">印财官</td>
+			<td id="ML_BZTB_Empty1_7" class="tbTdMemo"></td>
+			<td id="ML_BZTB_09_06">印财官</td>
+			<td id="ML_BZTB_09_07">印财官</td>
+			<td id="ML_BZTB_09_08">印财官</td>
+			<td id="ML_BZTB_09_09">印财官</td>
+			<td id="ML_BZTB_Empty2_7"></td>
+			<td id="ML_BZTB_09_10">印财官</td>
+			<td id="ML_BZTB_09_11">印财官</td>
+			<td id="ML_BZTB_09_12">印财官</td>
+			<td id="ML_BZTB_09_13">印财官</td>
+			<td id="ML_BZTB_09_14">印财官</td>
+		</tr>
+		<tr>
+			<td id="ML_BZTB_10_03">生/墓</td>
+			<td id="ML_BZTB_10_04">生/墓</td>
+			<td id="ML_BZTB_10_05">生/墓</td>
+			<td id="ML_BZTB_Empty1_8" class="tbTdMemo">火土</td>
+			<td id="ML_BZTB_10_06">生/墓</td>
+			<td id="ML_BZTB_10_07">生/墓</td>
+			<td id="ML_BZTB_10_08">生/墓</td>
+			<td id="ML_BZTB_10_09">生/墓</td>
+			<td id="ML_BZTB_Empty2_8"></td>
+			<td id="ML_BZTB_10_10">生/墓</td>
+			<td id="ML_BZTB_10_11">生/墓</td>
+			<td id="ML_BZTB_10_12">生/墓</td>
+			<td id="ML_BZTB_10_13">生/墓</td>
+			<td id="ML_BZTB_10_14">生/墓</td>
+		</tr>
+		<tr>
+			<td id="ML_BZTB_11_03">生/墓</td>
+			<td id="ML_BZTB_11_04">生/墓</td>
+			<td id="ML_BZTB_11_05">生/墓</td>
+			<td id="ML_BZTB_Empty1_9" class="tbTdMemo">水土</td>
+			<td id="ML_BZTB_11_06">生/墓</td>
+			<td id="ML_BZTB_11_07">生/墓</td>
+			<td id="ML_BZTB_11_08">生/墓</td>
+			<td id="ML_BZTB_11_09">生/墓</td>
+			<td id="ML_BZTB_Empty2_9"></td>
+			<td id="ML_BZTB_11_10">生/墓</td>
+			<td id="ML_BZTB_11_11">生/墓</td>
+			<td id="ML_BZTB_11_12">生/墓</td>
+			<td id="ML_BZTB_11_13">生/墓</td>
+			<td id="ML_BZTB_11_14">生/墓</td>
+		</tr>
+		<tr class="tbTdKongWang">
+			<td id="ML_BZTB_12_03">戌亥</td>
+			<td id="ML_BZTB_12_04">戌亥</td>
+			<td id="ML_BZTB_12_05">戌亥</td>
+			<td id="ML_BZTB_Empty1_10" class="tbTdMemo" style="color: crimson;">空亡</td>
+			<td id="ML_BZTB_12_06">戌亥</td>
+			<td id="ML_BZTB_12_07">戌亥</td>
+			<td id="ML_BZTB_12_08">戌亥</td>
+			<td id="ML_BZTB_12_09">戌亥</td>
+			<td id="ML_BZTB_Empty2_10"></td>
+			<td id="ML_BZTB_12_10">戌亥</td>
+			<td id="ML_BZTB_12_11">戌亥</td>
+			<td id="ML_BZTB_12_12">戌亥</td>
+			<td id="ML_BZTB_12_13">戌亥</td>
+			<td id="ML_BZTB_12_14">戌亥</td>
+		</tr>
+		<tr class="tbTdZhuMemo" style="display: none;">
+			<td id="ML_BZTB_13_03">03</td>
+			<td id="ML_BZTB_13_04">04</td>
+			<td id="ML_BZTB_13_05">05</td>
+			<td id="ML_BZTB_Empty1_10" class="tbTdMemo"></td>
+			<td id="ML_BZTB_13_06">6年</td>
+			<td id="ML_BZTB_13_07">7月</td>
+			<td id="ML_BZTB_13_08">8日</td>
+			<td id="ML_BZTB_13_09">9時</td>
+			<td id="ML_BZTB_Empty2_10"></td>
+			<td id="ML_BZTB_13_10">10運</td>
+			<td id="ML_BZTB_13_11">11年</td>
+			<td id="ML_BZTB_13_12">12月</td>
+			<td id="ML_BZTB_13_13">13日</td>
+			<td id="ML_BZTB_13_14">14時</td>
+		</tr>
+	</table><hr>
+
+	<table id=ML_BZ_YunTB class="">
+		<tr  class="tbTdZhuName">
+			<td id=ML_BZMonth_DaYunSel></td>
+			<td id=ML_BZYun_03_00>印</td>
+			<td id=ML_BZYun_03_01>印</td>
+			<td id=ML_BZYun_03_02>印</td>
+			<td id=ML_BZYun_03_03>印</td>
+			<td id=ML_BZYun_03_04>印</td>
+			<td id=ML_BZYun_03_05>印</td>
+			<td id=ML_BZYun_03_06>印</td>
+			<td id=ML_BZYun_03_07>印</td>
+			<td id=ML_BZYun_03_08>印</td>
+			<td id=ML_BZYun_03_09>印</td>
+			<td id=ML_BZYun_03_10>印</td>
+			<td id=ML_BZYun_03_11>印</td>
+			<td id=ML_BZYun_03_12>印</td>
+			<td id=ML_BZYun_03_13>印</td>
+		</tr>
+		<tr  class="tbYunTdTianGan">
+			<td class='daYunLiuYearFlag'>大</td>
+			<td id=ML_BZYun_04_00 onclick="ML_daYunTBZhuSel(0);">甲</td>
+			<td id=ML_BZYun_04_01 onclick="ML_daYunTBZhuSel(1);">乙</td>
+			<td id=ML_BZYun_04_02 onclick="ML_daYunTBZhuSel(2);">丙</td>
+			<td id=ML_BZYun_04_03 onclick="ML_daYunTBZhuSel(3);">丁</td>
+			<td id=ML_BZYun_04_04 onclick="ML_daYunTBZhuSel(4);">戊</td>
+			<td id=ML_BZYun_04_05 onclick="ML_daYunTBZhuSel(5);">己</td>
+			<td id=ML_BZYun_04_06 onclick="ML_daYunTBZhuSel(6);">庚</td>
+			<td id=ML_BZYun_04_07 onclick="ML_daYunTBZhuSel(7);">辛</td>
+			<td id=ML_BZYun_04_08 onclick="ML_daYunTBZhuSel(8);">壬</td>
+			<td id=ML_BZYun_04_09 onclick="ML_daYunTBZhuSel(9);">癸</td>
+			<td id=ML_BZYun_04_10 onclick="ML_daYunTBZhuSel(10);">甲</td>
+			<td id=ML_BZYun_04_11 onclick="ML_daYunTBZhuSel(11);">乙</td>
+			<td id=ML_BZYun_04_12 onclick="ML_daYunTBZhuSel(12);">丙</td>
+			<td id=ML_BZYun_04_13 onclick="ML_daYunTBZhuSel(13);">丁</td>
+		</tr>
+		<tr class="tbYunTdDiZhi">
+			<td class='daYunLiuYearFlag'>運</td>
+			<td id=ML_BZYun_05_00 onclick="ML_daYunTBZhuSel(0);">子</td>
+			<td id=ML_BZYun_05_01 onclick="ML_daYunTBZhuSel(1);">丑</td>
+			<td id=ML_BZYun_05_02 onclick="ML_daYunTBZhuSel(2);">寅</td>
+			<td id=ML_BZYun_05_03 onclick="ML_daYunTBZhuSel(3);">卯</td>
+			<td id=ML_BZYun_05_04 onclick="ML_daYunTBZhuSel(4);">辰</td>
+			<td id=ML_BZYun_05_05 onclick="ML_daYunTBZhuSel(5);">巳</td>
+			<td id=ML_BZYun_05_06 onclick="ML_daYunTBZhuSel(6);">午</td>
+			<td id=ML_BZYun_05_07 onclick="ML_daYunTBZhuSel(7);">未</td>
+			<td id=ML_BZYun_05_08 onclick="ML_daYunTBZhuSel(8);">申</td>
+			<td id=ML_BZYun_05_09 onclick="ML_daYunTBZhuSel(9);">酉</td>
+			<td id=ML_BZYun_05_10 onclick="ML_daYunTBZhuSel(10);">戌</td>
+			<td id=ML_BZYun_05_11 onclick="ML_daYunTBZhuSel(11);">亥</td>
+			<td id=ML_BZYun_05_12 onclick="ML_daYunTBZhuSel(12);">子</td>
+			<td id=ML_BZYun_05_13 onclick="ML_daYunTBZhuSel(13);">丑</td>
+		</tr>
+		<tr>
+			<td class="tbTdKongWang">火土</td>
+			<td id=ML_BZYun_06_00>生/生</td>
+			<td id=ML_BZYun_06_01>浴/生</td>
+			<td id=ML_BZYun_06_02>冠/生</td>
+			<td id=ML_BZYun_06_03>禄/生</td>
+			<td id=ML_BZYun_06_04>旺/生</td>
+			<td id=ML_BZYun_06_05>衰/生</td>
+			<td id=ML_BZYun_06_06>病/生</td>
+			<td id=ML_BZYun_06_07>死/生</td>
+			<td id=ML_BZYun_06_08>墓/生</td>
+			<td id=ML_BZYun_06_09>绝/生</td>
+			<td id=ML_BZYun_06_10>胎/生</td>
+			<td id=ML_BZYun_06_11>养/生</td>
+			<td id=ML_BZYun_06_12>生/生</td>
+			<td id=ML_BZYun_06_13>浴/生</td>
+		</tr>
+		<tr>
+			<td class="tbTdKongWang">水土</td>
+			<td id=ML_BZYun_07_00>生/生</td>
+			<td id=ML_BZYun_07_01>浴/生</td>
+			<td id=ML_BZYun_07_02>冠/生</td>
+			<td id=ML_BZYun_07_03>禄/生</td>
+			<td id=ML_BZYun_07_04>旺/生</td>
+			<td id=ML_BZYun_07_05>衰/生</td>
+			<td id=ML_BZYun_07_06>病/生</td>
+			<td id=ML_BZYun_07_07>死/生</td>
+			<td id=ML_BZYun_07_08>墓/生</td>
+			<td id=ML_BZYun_07_09>绝/生</td>
+			<td id=ML_BZYun_07_10>胎/生</td>
+			<td id=ML_BZYun_07_11>养/生</td>
+			<td id=ML_BZYun_07_12>生/生</td>
+			<td id=ML_BZYun_07_13>浴/生</td>
+		</tr>
+		<tr class="tbTdKongWang">
+			<td>周歲</td>
+			<td id=ML_BZYun_08_00>-10</td>
+			<td id=ML_BZYun_08_01>0</td>
+			<td id=ML_BZYun_08_02>5</td>
+			<td id=ML_BZYun_08_03>15</td>
+			<td id=ML_BZYun_08_04>25</td>
+			<td id=ML_BZYun_08_05>35</td>
+			<td id=ML_BZYun_08_06>45</td>
+			<td id=ML_BZYun_08_07>55</td>
+			<td id=ML_BZYun_08_08>65</td>
+			<td id=ML_BZYun_08_09>75</td>
+			<td id=ML_BZYun_08_10>85</td>
+			<td id=ML_BZYun_08_11>95</td>
+			<td id=ML_BZYun_08_12>105</td>
+			<td id=ML_BZYun_08_13>115</td>
+		</tr>
+		<tr class="tbTdKongWang">
+		<td>年</td>
+		<td id=ML_BZYun_09_00>85</td>
+		<td id=ML_BZYun_09_01>95</td>
+		<td id=ML_BZYun_09_02>00</td>
+		<td id=ML_BZYun_09_03>10</td>
+		<td id=ML_BZYun_09_04>15</td>
+		<td id=ML_BZYun_09_05>25</td>
+		<td id=ML_BZYun_09_06>35</td>
+		<td id=ML_BZYun_09_07>45</td>
+		<td id=ML_BZYun_09_08>55</td>
+		<td id=ML_BZYun_09_09>65</td>
+		<td id=ML_BZYun_09_10>75</td>
+		<td id=ML_BZYun_09_11>85</td>
+		<td id=ML_BZYun_09_12>95</td>
+		<td id=ML_BZYun_09_13>05</td>
+	</tr>
+	</table><hr>
+
+	<table id=ML_BZ_LiuYearTB class="">
+		<tr  class="tbTdZhuName">
+			<td id=ML_BZMonth_LiuYearSel></td>
+			<td id=ML_BZYear_03_00>印</td>
+			<td id=ML_BZYear_03_01>印</td>
+			<td id=ML_BZYear_03_02>印</td>
+			<td id=ML_BZYear_03_03>印</td>
+			<td id=ML_BZYear_03_04>印</td>
+			<td id=ML_BZYear_03_05>印</td>
+			<td id=ML_BZYear_03_06>印</td>
+			<td id=ML_BZYear_03_07>印</td>
+			<td id=ML_BZYear_03_08>印</td>
+			<td id=ML_BZYear_03_09>印</td>
+			<td id=ML_BZYear_03_10>印</td>
+			<td id=ML_BZYear_03_11>印</td>
+			<td id=ML_BZYear_03_12>印</td>
+			<td id=ML_BZYear_03_13>印</td>
+		</tr>
+		<tr  class="tbYunTdTianGan">
+			<td class='daYunLiuYearFlag'>流</td>
+			<td id=ML_BZYear_04_00 onclick="ML_liuYearTBZhuSel(0);">甲</td>
+			<td id=ML_BZYear_04_01 onclick="ML_liuYearTBZhuSel(1);">乙</td>
+			<td id=ML_BZYear_04_02 onclick="ML_liuYearTBZhuSel(2);">丙</td>
+			<td id=ML_BZYear_04_03 onclick="ML_liuYearTBZhuSel(3);">丁</td>
+			<td id=ML_BZYear_04_04 onclick="ML_liuYearTBZhuSel(4);">戊</td>
+			<td id=ML_BZYear_04_05 onclick="ML_liuYearTBZhuSel(5);">己</td>
+			<td id=ML_BZYear_04_06 onclick="ML_liuYearTBZhuSel(6);">庚</td>
+			<td id=ML_BZYear_04_07 onclick="ML_liuYearTBZhuSel(7);">辛</td>
+			<td id=ML_BZYear_04_08 onclick="ML_liuYearTBZhuSel(8);">壬</td>
+			<td id=ML_BZYear_04_09 onclick="ML_liuYearTBZhuSel(9);">癸</td>
+			<td id=ML_BZYear_04_10 onclick="ML_liuYearTBZhuSel(10);">甲</td>
+			<td id=ML_BZYear_04_11 onclick="ML_liuYearTBZhuSel(11);">乙</td>
+			<td id=ML_BZYear_04_12 onclick="ML_liuYearTBZhuSel(12);">丙</td>
+			<td id=ML_BZYear_04_13 onclick="ML_liuYearTBZhuSel(13);">丁</td>
+		</tr>
+		<tr class="tbYunTdDiZhi">
+			<td class='daYunLiuYearFlag'>年</td>
+			<td id=ML_BZYear_05_00 onclick="ML_liuYearTBZhuSel(0);">子</td>
+			<td id=ML_BZYear_05_01 onclick="ML_liuYearTBZhuSel(1);">丑</td>
+			<td id=ML_BZYear_05_02 onclick="ML_liuYearTBZhuSel(2);">寅</td>
+			<td id=ML_BZYear_05_03 onclick="ML_liuYearTBZhuSel(3);">卯</td>
+			<td id=ML_BZYear_05_04 onclick="ML_liuYearTBZhuSel(4);">辰</td>
+			<td id=ML_BZYear_05_05 onclick="ML_liuYearTBZhuSel(5);">巳</td>
+			<td id=ML_BZYear_05_06 onclick="ML_liuYearTBZhuSel(6);">午</td>
+			<td id=ML_BZYear_05_07 onclick="ML_liuYearTBZhuSel(7);">未</td>
+			<td id=ML_BZYear_05_08 onclick="ML_liuYearTBZhuSel(8);">申</td>
+			<td id=ML_BZYear_05_09 onclick="ML_liuYearTBZhuSel(9);">酉</td>
+			<td id=ML_BZYear_05_10 onclick="ML_liuYearTBZhuSel(10);">戌</td>
+			<td id=ML_BZYear_05_11 onclick="ML_liuYearTBZhuSel(11);">亥</td>
+			<td id=ML_BZYear_05_12 onclick="ML_liuYearTBZhuSel(12);">子</td>
+			<td id=ML_BZYear_05_13 onclick="ML_liuYearTBZhuSel(13);">丑</td>
+		</tr>
+		<tr>
+			<td class="tbTdKongWang">火土</td>
+			<td id=ML_BZYear_06_00>生/生</td>
+			<td id=ML_BZYear_06_01>浴/生</td>
+			<td id=ML_BZYear_06_02>冠/生</td>
+			<td id=ML_BZYear_06_03>禄/生</td>
+			<td id=ML_BZYear_06_04>旺/生</td>
+			<td id=ML_BZYear_06_05>衰/生</td>
+			<td id=ML_BZYear_06_06>病/生</td>
+			<td id=ML_BZYear_06_07>死/生</td>
+			<td id=ML_BZYear_06_08>墓/生</td>
+			<td id=ML_BZYear_06_09>绝/生</td>
+			<td id=ML_BZYear_06_10>胎/生</td>
+			<td id=ML_BZYear_06_11>养/生</td>
+			<td id=ML_BZYear_06_12>生/生</td>
+			<td id=ML_BZYear_06_13>浴/生</td>
+		</tr>
+		<tr>
+			<td class="tbTdKongWang">水土</td>
+			<td id=ML_BZYear_07_00>生/生</td>
+			<td id=ML_BZYear_07_01>浴/生</td>
+			<td id=ML_BZYear_07_02>冠/生</td>
+			<td id=ML_BZYear_07_03>禄/生</td>
+			<td id=ML_BZYear_07_04>旺/生</td>
+			<td id=ML_BZYear_07_05>衰/生</td>
+			<td id=ML_BZYear_07_06>病/生</td>
+			<td id=ML_BZYear_07_07>死/生</td>
+			<td id=ML_BZYear_07_08>墓/生</td>
+			<td id=ML_BZYear_07_09>绝/生</td>
+			<td id=ML_BZYear_07_10>胎/生</td>
+			<td id=ML_BZYear_07_11>养/生</td>
+			<td id=ML_BZYear_07_12>生/生</td>
+			<td id=ML_BZYear_07_13>浴/生</td>
+		</tr>
+		<tr  class="tbTdKongWang">
+			<td>周歲</td>
+			<td id=ML_BZYear_08_00>-10</td>
+			<td id=ML_BZYear_08_01>0</td>
+			<td id=ML_BZYear_08_02>5</td>
+			<td id=ML_BZYear_08_03>15</td>
+			<td id=ML_BZYear_08_04>25</td>
+			<td id=ML_BZYear_08_05>35</td>
+			<td id=ML_BZYear_08_06>45</td>
+			<td id=ML_BZYear_08_07>55</td>
+			<td id=ML_BZYear_08_08>65</td>
+			<td id=ML_BZYear_08_09>75</td>
+			<td id=ML_BZYear_08_10>85</td>
+			<td id=ML_BZYear_08_11>95</td>
+			<td id=ML_BZYear_08_12>105</td>
+			<td id=ML_BZYear_08_13>115</td>
+		</tr>
+		<tr class="tbTdKongWang">
+			<td>年</td>
+			<td id=ML_BZYear_09_00>85</td>
+			<td id=ML_BZYear_09_01>95</td>
+			<td id=ML_BZYear_09_02>00</td>
+			<td id=ML_BZYear_09_03>10</td>
+			<td id=ML_BZYear_09_04>15</td>
+			<td id=ML_BZYear_09_05>25</td>
+			<td id=ML_BZYear_09_06>35</td>
+			<td id=ML_BZYear_09_07>45</td>
+			<td id=ML_BZYear_09_08>55</td>
+			<td id=ML_BZYear_09_09>65</td>
+			<td id=ML_BZYear_09_10>75</td>
+			<td id=ML_BZYear_09_11>85</td>
+			<td id=ML_BZYear_09_12>95</td>
+			<td id=ML_BZYear_09_13>05</td>
+		</tr>
+	</table><hr>
+
+
+	<table id=ML_BZ_LiuMonthTB class="">
+		<tr  class="tbTdZhuName">
+			<td id=ML_BZMonth_LiuMonthSel></td>
+			<td id=ML_BZMonth_03_00>印</td>
+			<td id=ML_BZMonth_03_01>印</td>
+			<td id=ML_BZMonth_03_02>印</td>
+			<td id=ML_BZMonth_03_03>印</td>
+			<td id=ML_BZMonth_03_04>印</td>
+			<td id=ML_BZMonth_03_05>印</td>
+			<td id=ML_BZMonth_03_06>印</td>
+			<td id=ML_BZMonth_03_07>印</td>
+			<td id=ML_BZMonth_03_08>印</td>
+			<td id=ML_BZMonth_03_09>印</td>
+			<td id=ML_BZMonth_03_10>印</td>
+			<td id=ML_BZMonth_03_11>印</td>
+			<td id=ML_BZMonth_03_12>印</td>
+			<td id=ML_BZMonth_03_13>印</td>
+		</tr>
+		<tr  class="tbYunTdTianGan">
+			<td class='daYunLiuYearFlag'>流</td>
+			<td id=ML_BZMonth_04_00 onclick="ML_liuMonthTBZhuSel(0);">甲</td>
+			<td id=ML_BZMonth_04_01 onclick="ML_liuMonthTBZhuSel(1);">乙</td>
+			<td id=ML_BZMonth_04_02 onclick="ML_liuMonthTBZhuSel(2);">丙</td>
+			<td id=ML_BZMonth_04_03 onclick="ML_liuMonthTBZhuSel(3);">丁</td>
+			<td id=ML_BZMonth_04_04 onclick="ML_liuMonthTBZhuSel(4);">戊</td>
+			<td id=ML_BZMonth_04_05 onclick="ML_liuMonthTBZhuSel(5);">己</td>
+			<td id=ML_BZMonth_04_06 onclick="ML_liuMonthTBZhuSel(6);">庚</td>
+			<td id=ML_BZMonth_04_07 onclick="ML_liuMonthTBZhuSel(7);">辛</td>
+			<td id=ML_BZMonth_04_08 onclick="ML_liuMonthTBZhuSel(8);">壬</td>
+			<td id=ML_BZMonth_04_09 onclick="ML_liuMonthTBZhuSel(9);">癸</td>
+			<td id=ML_BZMonth_04_10 onclick="ML_liuMonthTBZhuSel(10);">甲</td>
+			<td id=ML_BZMonth_04_11 onclick="ML_liuMonthTBZhuSel(11);">乙</td>
+			<td id=ML_BZMonth_04_12 onclick="ML_liuMonthTBZhuSel(12);">丙</td>
+			<td id=ML_BZMonth_04_13 onclick="ML_liuMonthTBZhuSel(13);">丁</td>
+		</tr>
+		<tr class="tbYunTdDiZhi">
+			<td class='daYunLiuYearFlag'>月</td>
+			<td id=ML_BZMonth_05_00 onclick="ML_liuMonthTBZhuSel(0);">子</td>
+			<td id=ML_BZMonth_05_01 onclick="ML_liuMonthTBZhuSel(1);">丑</td>
+			<td id=ML_BZMonth_05_02 onclick="ML_liuMonthTBZhuSel(2);">寅</td>
+			<td id=ML_BZMonth_05_03 onclick="ML_liuMonthTBZhuSel(3);">卯</td>
+			<td id=ML_BZMonth_05_04 onclick="ML_liuMonthTBZhuSel(4);">辰</td>
+			<td id=ML_BZMonth_05_05 onclick="ML_liuMonthTBZhuSel(5);">巳</td>
+			<td id=ML_BZMonth_05_06 onclick="ML_liuMonthTBZhuSel(6);">午</td>
+			<td id=ML_BZMonth_05_07 onclick="ML_liuMonthTBZhuSel(7);">未</td>
+			<td id=ML_BZMonth_05_08 onclick="ML_liuMonthTBZhuSel(8);">申</td>
+			<td id=ML_BZMonth_05_09 onclick="ML_liuMonthTBZhuSel(9);">酉</td>
+			<td id=ML_BZMonth_05_10 onclick="ML_liuMonthTBZhuSel(10);">戌</td>
+			<td id=ML_BZMonth_05_11 onclick="ML_liuMonthTBZhuSel(11);">亥</td>
+			<td id=ML_BZMonth_05_12 onclick="ML_liuMonthTBZhuSel(12);">子</td>
+			<td id=ML_BZMonth_05_13 onclick="ML_liuMonthTBZhuSel(13);">丑</td>
+		</tr>
+		<tr>
+			<td class="tbTdKongWang">火土</td>
+			<td id=ML_BZMonth_06_00>生/生</td>
+			<td id=ML_BZMonth_06_01>浴/生</td>
+			<td id=ML_BZMonth_06_02>冠/生</td>
+			<td id=ML_BZMonth_06_03>禄/生</td>
+			<td id=ML_BZMonth_06_04>旺/生</td>
+			<td id=ML_BZMonth_06_05>衰/生</td>
+			<td id=ML_BZMonth_06_06>病/生</td>
+			<td id=ML_BZMonth_06_07>死/生</td>
+			<td id=ML_BZMonth_06_08>墓/生</td>
+			<td id=ML_BZMonth_06_09>绝/生</td>
+			<td id=ML_BZMonth_06_10>胎/生</td>
+			<td id=ML_BZMonth_06_11>养/生</td>
+			<td id=ML_BZMonth_06_12>生/生</td>
+			<td id=ML_BZMonth_06_13>浴/生</td>
+		</tr>
+		<tr>
+			<td class="tbTdKongWang">水土</td>
+			<td id=ML_BZMonth_07_00>生/生</td>
+			<td id=ML_BZMonth_07_01>浴/生</td>
+			<td id=ML_BZMonth_07_02>冠/生</td>
+			<td id=ML_BZMonth_07_03>禄/生</td>
+			<td id=ML_BZMonth_07_04>旺/生</td>
+			<td id=ML_BZMonth_07_05>衰/生</td>
+			<td id=ML_BZMonth_07_06>病/生</td>
+			<td id=ML_BZMonth_07_07>死/生</td>
+			<td id=ML_BZMonth_07_08>墓/生</td>
+			<td id=ML_BZMonth_07_09>绝/生</td>
+			<td id=ML_BZMonth_07_10>胎/生</td>
+			<td id=ML_BZMonth_07_11>养/生</td>
+			<td id=ML_BZMonth_07_12>生/生</td>
+			<td id=ML_BZMonth_07_13>浴/生</td>
+		</tr>
+		<tr  class="tbTdKongWang">
+			<td>日期</td>
+			<td id=ML_BZMonth_08_00>-10</td>
+			<td id=ML_BZMonth_08_01>0</td>
+			<td id=ML_BZMonth_08_02>5</td>
+			<td id=ML_BZMonth_08_03>15</td>
+			<td id=ML_BZMonth_08_04>25</td>
+			<td id=ML_BZMonth_08_05>35</td>
+			<td id=ML_BZMonth_08_06>45</td>
+			<td id=ML_BZMonth_08_07>55</td>
+			<td id=ML_BZMonth_08_08>65</td>
+			<td id=ML_BZMonth_08_09>75</td>
+			<td id=ML_BZMonth_08_10>85</td>
+			<td id=ML_BZMonth_08_11>95</td>
+			<td id=ML_BZMonth_08_12>105</td>
+			<td id=ML_BZMonth_08_13>115</td>
+		</tr>
+
+	</table><hr>
+
+	<div id=ML_BaZiInfoOut>命理信息显示</div><hr>
+
+	<div id=ML_0002>显示</div><hr>
+
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+

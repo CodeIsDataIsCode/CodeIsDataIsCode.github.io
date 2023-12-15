@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<head>
+	<meta name="keywords" content="天时;天机;命理;社会趋势;预测;测算;八字;皇极经世;紫微斗数;紫微;四柱;寿星天文历;万年历;农历;农历计算;算法;天文算法;伊斯兰历;回历;节气;交节时刻;日食;月食;地方食;行星历" name=keywords>
+	<meta charset="UTF-8" http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="your description">
+	<meta name="author" content="author,email address">
+	<meta name="robots" content="index,follow">
+	<meta name="renderer" content="ie-stand">
+
+	<title id="ThisTitle">識天時窺天機-年曆</title>
+
+		<!--	定义几种常用的显css风格	-->
+	<link rel="stylesheet" href="./css/year_calendar.css" />
+	<style>
+
+	</style>
+	
+		<!--	需要调用的javascript文件	-->
+		<script src=./JS/globalVar.js></script> <!--	全局变量表	-->
+		<script src=./JS/tools.js></script>	<!--	页面工具函数	-->
+		<script src=./JS/eph0.js></script>	<!--	天文常数等	-->
+		<script src=./JS/eph.js></script>	<!--	星历计算模块	-->
+		<script src=./JS/lunar_Fun.js></script>	<!--	日历物件、农历核心模块	-->
+		<script src=./JS/GEOInfo.js></script>	<!--	全国城市经纬数据库及皇帝纪年数据库	-->
+
+		<script src=./JS/yinYangSystemInfo.js></script><!--	阴阳五行系统相关函数	-->
+		<script src=./JS/sanYuanJiuYunInfo.js></script><!--	三元九运系统相关函数	-->
+	
+
+		<script src=./JS/year_calendar_PGShow.js></script>	<!--	首頁顯示相關的	-->
+	
+</head>
+
+<body  class="headStyle">
+
+
+	公元：<input id=YearCalYearText type=text size=4 value=1980>年
+	<input id=YearCalInfoOption type=checkbox checked>時刻/干支&nbsp;
+	<button onclick="getNianLi(0)">計算</button>
+	<button onclick="getNianLi(-1)">-年</button>
+	<button onclick="getNianLi(1)">+年</button>&nbsp;
+	多年数：<input id=YearCalYearNumText type=text size=2 value=30>
+	<button onclick="getNianLiN()">多年</button>
+	<hr>
+	<div id=YearCalOutArea></div>
+
+
+
+
+
+	<!--年历表-->
+	<table id=YearCalendarPGTB width="100%" style="display:''">
+		<tr id=YearCalendarPG>
+			<td class=dBot2>
+			</td>
+		</tr>
+	</table>
+
+</body>
+
+</html>

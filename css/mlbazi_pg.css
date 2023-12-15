@@ -1,0 +1,188 @@
+@charset "UTF-8";
+
+/* td  */
+table,
+th,tr{
+	/*
+  width: 50%;
+  vertical-align: bottom;
+  padding: 15px;控制边框和表格内容之间的间距
+
+  border-bottom: 1px solid #ddd;
+  background-color: #4CAF50;
+  color: white;
+  在 <table> 元素周围添加带有  的容器元素（例如 <div>），以实现响应式效果：
+  <div style="overflow-x:auto;">
+  width: 10%;
+
+  */
+
+	
+	font-size: 15px;		/*		*/
+	font-weight:normal;		/* normal  bold  */
+	height: 24px;
+	text-align: center;
+	border-collapse: collapse;	/*属性设置是否将表格边框折叠为单一边框：*/
+	
+	border: 0px solid rgb(126, 26, 26);
+	border-bottom: 0px solid #9e9ea1;		/*	每行的表格的下劃線	*/
+	overflow-x: auto;
+
+}
+
+td{
+
+	padding: 5px;			/*	控制边框和表格内容之间的间距	*/
+
+}
+
+/*在 <tr> 元素上使用 :hover 选择器，以突出显示鼠标悬停时的表格行：*/
+tr:hover {
+
+	background-color: #eefa4c;
+
+}
+
+/*为了实现斑马纹表格效果，请使用 nth-child() 选择器，并为所有偶数（或奇数）表行添加 background-color：*/
+tr:nth-child(even) {
+
+	background-color: #f7f7f2;
+
+}
+
+
+
+.ML_BZ_InfoInputDiv {
+
+	font-size: 12px;
+}
+
+
+/* 命盘表格中的行名称备注 */
+.tbTdMemo{
+
+	font-size: 6px;	
+	font: bold;		/*    */
+	font-weight:5px;
+	font-style: italic;
+	color:blue;
+}
+
+/* 命盘表格中納音行的樣式 */
+.tbTdZhuName{
+	/* font-weight:5px;   */
+	font-style: italic;
+	color:rgb(0, 0, 255);
+	font-size: 8px;		/*    */
+
+}
+
+/* 命盘表格中納音行的樣式 */
+.tbTdNaYin{
+	/* font-weight:5px;   */
+	font-style: italic;
+	color:rgb(0, 0, 255);
+	font-size: 8px;		/*    */
+
+}
+
+/* 命盘表格中柱號行的樣式 */
+.tbTdZhuNo{
+	/* font-weight:5px;   */
+	font-style: italic;
+	font:bold;
+	color:rgb(3, 37, 3);
+	font-size: 8px;		/*    */
+
+}
+
+/* 命盘表格中天干行的樣式 */
+.tbTdTianGan{
+		font:bold;
+		font-size:30px; /* font-weight  */
+		/*font-style: italic;*/
+	color:rgb(0, 0, 0);
+	height: 45px;
+		/*  font-size: 8px;	  */
+
+}
+
+.tbYunTdTianGan{
+	font-size:18px; /* font-weight  */
+		/*font-style: italic;*/
+	font:bold;
+	color:rgb(0, 0, 0);
+	height: 30px;
+		/*  font-size: 8px;	  */
+
+}
+
+/* 命盘表格中地支行的樣式 */
+.tbTdDiZhi{
+	font-size:30px; /* font-weight  */
+		/*font-style: italic;*/
+	color:rgb(0, 0, 0);
+	height: 45px;
+		/*  font-size: 8px;	  */
+
+}
+
+/* 命盘表格中地支行的樣式 */
+.tbYunTdDiZhi{
+	font-size:18px; /* font-weight  */
+		/*font-style: italic;*/
+	color:rgb(0, 0, 0);
+	height: 30px;
+		/*  font-size: 8px;	  */
+
+}
+
+/* 命盘表格中地支藏干的天干行的樣式 */
+.tbTdCangGan{
+	font-size:10px; /* font-weight  */
+		/*font-style: italic;*/
+	font-style:normal;
+	font:bold;
+	color:rgb(7, 59, 7);
+	height: 25px;
+		/*  font-size: 8px;	  */
+
+}
+
+/* 命盘表格中地支藏干的十神行的樣式 */
+.tbTdCangGanShen{
+	font-size:10px; /* font-weight  */
+		/*font-style: italic;*/
+	font:bold;
+	color:rgb(255, 0, 0);
+	height: 25px;
+		/*  font-size: 8px;	  */
+
+}
+
+/* 命盘表格中地支藏干的十神行的樣式 */
+.tbTdKongWang{
+	font-size:10px; /* font-weight  */
+		/*font-style: italic;*/
+	font:bold;
+	color:rgb(0, 0, 255);
+	height: 25px;
+		/*  font-size: 8px;	  */
+
+}
+
+
+/* 命盘表格中最後的行信息的備註的樣式 */
+.tbTdZhuMemo{
+	font-size: 7px;
+	background-color: rgb(248, 244, 12);
+	height: 20px;
+}
+
+
+.daYunLiuYearFlag{
+	font-size: 10px;
+	background-color: rgb(147, 147, 226);
+}
+
+

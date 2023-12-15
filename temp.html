@@ -1,0 +1,53 @@
+
+
+
+
+<button class='select' onclick="thisPageShow('mlbazhi_pg.htm')">八  字</button>
+<button onclick="thisPageShow('mlbazhi_tools.htm')">八字工具</button>
+<button onclick="thisPageShow('month_calendar.htm')">月 曆 表</button>
+<button onclick="thisPageShow('month_calendar.htm')">氣  朔</button>
+<button onclick="thisPageShow('year_calendar.htm')">年   历</button>
+<button onclick="thisPageShow('tools.htm')">工具</button>
+<button></button>
+
+//let btns = document.getElementById('funTabTit').getElementsByTagName('span');
+
+
+<!--
+<script>
+		let btns = document.getElementById('funTabTit').getElementsByTagName('span');
+		let tabCon = document.getElementById('tabCon');
+		for (let i = 0; i < btns.length; i++) {
+			btns[i].index = i;
+			btns[i].onclick = function () {
+				for (var i = 0; i < btns.length; i++) {
+					btns[i].className = '';
+				};
+				this.className = 'select';
+				if(i==0){
+					tabCon.src = 'bazhi_pg.htm';
+				}else if(i==1){
+					tabCon.src = 'bazhi_tools.htm';
+				}else if(i==2){
+					tabCon.src = 'month_calendar.htm';
+				}
+				
+				// 进行高度控制和处理
+				setTimeout(function () {
+					tabCon.style.height = tabCon.contentWindow.document.body.offsetHeight + 'px';
+					console.log(tabCon.contentWindow.document.body.offsetHeight);
+				}, 100);
+			}
+		};
+
+	</script>
+
+	<script id="JS_PageInit">
+		pageObjectInit();
+
+		//控制那个页面显示 MLBaZiPG
+		thisPageShow('MonthCalendarPG');
+
+	</script>
+
+-->

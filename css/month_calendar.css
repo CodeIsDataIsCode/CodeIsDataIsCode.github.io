@@ -1,0 +1,100 @@
+
+
+/*  */
+@charset "UTF-8";
+/**
+ * @desc File Info
+ * @author Author Name
+ * @date 2015-10-10
+ */
+
+.headStyle {
+	align: center; /*left   right*/
+}
+
+ td,
+ p {
+	 font-family: Sans-serif, 思源黑体;
+	 font-size: 12px;
+	 line-height: 150%
+ }
+
+ .bd0 {
+	 border: 0px
+ }
+
+ .bd1 {
+	 border: 1px solid #888888;
+	 padding: 10px
+ }
+
+ .bd2 {
+	 border: 2px solid #000000
+ }
+
+ .dTop {
+	 border-top: 1px solid #000000;
+	 font-size: 12px
+ }
+
+ .dBot {
+	 border-bottom: 1px solid #000000;
+	 font-size: 12px
+ }
+
+ .dRig {
+	 border-right: 1px solid #888888;
+	 font-size: 12px
+ }
+
+ .dLef {
+	 border-left: 1px solid #888888;
+	 font-size: 12px
+ }
+
+ .dRB {
+	 border-right: 1px solid #000000;
+	 border-bottom: 1px solid #000000;
+	 font-size: 12px
+ }
+
+ .dRT {
+	 border-right: 1px solid #000000;
+	 border-top: 1px solid #000000;
+	 font-size: 12px
+ }
+
+ .dBot2 {
+	 border-bottom: 1px solid #C0C0C0;
+	 font-size: 12px
+ }
+
+ .dTop2 {
+	 border-top: 1px solid #C0C0C0;
+	 font-size: 12px
+ }
+
+
+ .monthCalendarPGJiYuanInfo {
+		color: #ffff00;
+		background-color: #000066;
+		font-weight:bold;
+		font-size:15px;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
