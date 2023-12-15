@@ -1,0 +1,47 @@
+
+<!DOCTYPE html>
+<html>
+<head> 
+	<meta charset="utf-8"> 
+	<title>菜鸟教程(runoob.com)</title> 
+</head>
+<body>
+		
+	<h1>我的第一个 Web 页面</h1>
+	<p id="lb1">我的第一个段落。</p>
+	<script>
+		var loopNum1 = 5000;
+		var loopNum2 = 0;
+		
+		var startTime = new Date().getTime();
+		
+		for(var i=0; i<loopNum1; i++){
+			//document.write(Date() + i + "<br>");
+			document.write(new Date().getTime() + " - " + i + "<br>");
+		}
+		
+		var endTime = new Date().getTime();
+		var usedTime = endTime - startTime;
+		loopNum2++;
+		document.getElementById("lb1").innerHTML = "【开始：" + startTime + "】我的第一个段落，写入完成！" + loopNum2 + "【结束：" + endTime + "】" +  "【用了" + usedTime + "ms毫秒】";
+		console.log("调试信息1");
+		window.alert("执行完成！"  +  startTime / (3600*1000*24*365));
+		
+	</script>
+		
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
