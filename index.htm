@@ -65,10 +65,11 @@
 				<td width="100%" bgcolor="#E0E0FF">
 					<!--经纬选择-->
 					<select id=StateSel onchange="stateSelChange(0)" style="width:140px"></select>
-					<select id=CitySel onchange="citySelChange()" style="width:140px"></select>
+					<select id=CitySel onchange="citySelChange()" style="width:140px"></select>&emsp;
 					<!--经度纬度-->
-					经度:<input type=text id=LongSelText size=6 value="116.3833" oninput="longSelTextIn()">&nbsp;
-					纬度:<input type=text id=LatSelText size=6 value="39.9000" oninput="latSelTextIn()">
+					经度:<input type=text id=LongSelText size=6 value="116.3833" oninput="longSelTextIn()">&emsp;
+					纬度:<input type=text id=LatSelText size=6 value="39.9000" oninput="latSelTextIn()">&emsp;&emsp;
+					正显示：<label id=curShowPGLB size=6>**页</label>
 				</td>
 			</tr>
 		</table>
@@ -81,9 +82,9 @@
 					<select id=WhatCalendarSel onchange="">
 						<option value=1 selected>格里历:公元</option>
 						<option value=2>中国农历</option>
-						<option value=3>回历</option>
-						<option value=4>儒略历:公元</option>
-						<option value=5>历</option>
+						<option value=3>儒略历:公元</option>
+						<option value=4>基督公元混合</option>
+						<option value=5>回历</option>
 						<option value=6>历</option>
 						<option value=7>历</option>
 						<option value=8>历</option>
@@ -97,52 +98,69 @@
 						<option value=1 selected>2000年</option>
 						<option value=2>20001年</option>
 					</select>&nbsp;
+					<select id=ThisLeapMonthSel onchange="">
+						<option value=0 selected>不润月</option>
+						<option value=1>润月</option>
+					</select>&nbsp;
+					<select id=ThisYueJianSel onchange="">
+						<option value=1>建子</option>
+						<option value=2>建丑</option>
+						<option value=3 selected>建寅</option>
+					</select>&nbsp;
 					<select id=ThisMonthSel onchange="thisMonthSelChange()">
-						<option value=1>1月</option>
-						<option value=2>2月</option>
-						<option value=3>3月</option>
-						<option value=4>4月</option>
-						<option value=5>5月</option>
-						<option value=6 selected>6月</option>
-						<option value=7>7月</option>
-						<option value=8>8月</option>
-						<option value=9>9月</option>
-						<option value=10>10月</option>
-						<option value=11>11月</option>
-						<option value=12>12月</option>
+						<option value=-1>-1月</option>
+						<option value=0>00月</option>
+						<option value=1 selected>01/一月</option>
+						<option value=2>02/二月</option>
+						<option value=3>03/三月</option>
+						<option value=4>04/四月</option>
+						<option value=5>05/五月</option>
+						<option value=6>06/六月</option>
+						<option value=7>07/七月</option>
+						<option value=8>08/八月</option>
+						<option value=9>09/九月</option>
+						<option value=10>10/十月</option>
+						<option value=11>11/十一月</option>
+						<option value=12>12/十二月</option>
+						<option value=13>13/十三月</option>
+						<option value=14>14/十四月</option>
 					</select>&nbsp;
 					<select id=ThisDaySel onchange="thisDaySelChange()">
-						<option value=1>1日</option>
-						<option value=2>2日</option>
-						<option value=3>3日</option>
-						<option value=4>4日</option>
-						<option value=5>5日</option>
-						<option value=6>6日</option>
-						<option value=7>7日</option>
-						<option value=8>8日</option>
-						<option value=9>9日</option>
-						<option value=10>10日</option>
-						<option value=11>11日</option>
-						<option value=12>12日</option>
-						<option value=13>13日</option>
-						<option value=14>14日</option>
-						<option value=15 selected>15日</option>
-						<option value=16>16日</option>
-						<option value=17>17日</option>
-						<option value=18>18日</option>
-						<option value=19>19日</option>
-						<option value=20>20日</option>
-						<option value=21>21日</option>
-						<option value=22>22日</option>
-						<option value=23>23日</option>
-						<option value=24>24日</option>
-						<option value=25>25日</option>
-						<option value=26>26日</option>
-						<option value=27>27日</option>
-						<option value=28>28日</option>
-						<option value=29>29日</option>
-						<option value=30>30日</option>
-						<option value=31>31日</option>
+						<option value=-1>-1日</option>
+						<option value=0>00日</option>
+						<option value=1 selected>01/初一日</option>
+						<option value=2>02/初二日</option>
+						<option value=3>03/初三日</option>
+						<option value=4>04/初四日</option>
+						<option value=5>05/初五日</option>
+						<option value=6>06/初六日</option>
+						<option value=7>07/初七日</option>
+						<option value=8>08/初八日</option>
+						<option value=9>09/初九日</option>
+						<option value=10>10/初十日</option>
+						<option value=11>11/十一日</option>
+						<option value=12>12/十二日</option>
+						<option value=13>13/十三日</option>
+						<option value=14>14/十四日</option>
+						<option value=15>15/十五日</option>
+						<option value=16>16/十六日</option>
+						<option value=17>17/十七日</option>
+						<option value=18>18/十八日</option>
+						<option value=19>19/十九日</option>
+						<option value=20>20/二十日</option>
+						<option value=21>21/廿一日</option>
+						<option value=22>22/廿二日</option>
+						<option value=23>23/廿三日</option>
+						<option value=24>24/廿四日</option>
+						<option value=25>25/廿五日</option>
+						<option value=26>26/廿六日</option>
+						<option value=27>27/廿七日</option>
+						<option value=28>28/廿八日</option>
+						<option value=29>29/廿九日</option>
+						<option value=30>30/三十日</option>
+						<option value=31>31/卅一日</option>
+						<option value=32>32/卅一日</option>
+						<option value=33>33/卅二日</option>
 					</select>&nbsp;
 
 					<select id=YearChangeSel onchange="yearChangeSelChange()">
@@ -152,8 +170,11 @@
 						<option value=-200>前二百年</option>
 						<option value=-100>前百年</option>
 						<option value=-50>前圩年</option>
-						<option value=-1 selected>前1年</option>
+						<option value=-10>前十年</option>
+						<option value=-1>前1年</option>
+						<option value=0 selected>年不变</option>
 						<option value=1>后1年</option>
+						<option value=10>后十年</option>
 						<option value=50>后圩年</option>
 						<option value=100>后百年</option>
 						<option value=200>后二百年</option>
@@ -166,22 +187,28 @@
 						<option value=-50>前50月</option>
 						<option value=-20>前20月</option>
 						<option value=-12>前12月</option>
-						<option value=12 selected>后12月</option>
+						<option value=0 selected>月不变</option>
+						<option value=12>后12月</option>
 						<option value=20>后20月</option>
 						<option value=50>后50月</option>
 						<option value=100>后100月</option>
 					</select>&nbsp;
 					<select id=DayChangeSel onchange="dayChangeSelChange()">
+						<option value=-1000>前千日</option>
+						<option value=-100>前百日</option>
 						<option value=-30>前30日</option>
 						<option value=-10>前10日</option>
 						<option value=-5>前5日</option>
 						<option value=-2>前2日</option>
 						<option value=-1>前1日</option>
-						<option value=1 selected>后1日</option>
+						<option value=0 selected>日不变</option>
+						<option value=1>后1日</option>
 						<option value=2>后2日</option>
 						<option value=5>后5日</option>
 						<option value=10>后10日</option>
 						<option value=30>后30日</option>
+						<option value=100>后百日</option>
+						<option value=1000>后千日</option>
 					</select>&nbsp;
 				</td>
 			</tr>
@@ -192,17 +219,17 @@
 		<!--	主要功能菜單項	-->
 	<nav>
 		<div id="funTabTit" class='tit' onload="">
-			<span id=funTab1 onclick="thisTabPageShow('personalInfo.htm',1)">命例管理</span><br>
-			<span id=funTab1 onclick="thisTabPageShow('mlbazi_pg.htm',2)">八字排盤</span><br>
-			<span id=funTab2 onclick="thisTabPageShow('mlbazi_tools.htm',3)">八字工具</span><br>
-			<span id=funTab3 onclick="thisTabPageShow('month_calendar.htm',4)">月 曆 表</span><br>
-			<span id=funTab4 onclick="thisTabPageShow('qishuo_calc_pg.htm',5)">氣朔計算</span><br>
-			<span id=funTab5 onclick="thisTabPageShow('year_calendar.htm',6)">農曆年曆</span><br>
-			<span id=funTab6 onclick="thisTabPageShow('calendar_tools.htm',7)">月曆工具</span><br>
-			<span id=funTab7 onclick="thisTabPageShow('empty_page.htm',8)">空   頁</span><br>
-			<span id=funTab8 onclick="thisTabPageShow('empty_page.htm',9)">空   頁</span><br>
-			<span id=funTab9 onclick="thisTabPageShow('nextPageNav.htm',10)">直接跳转</span><br>
-			<span id=funTab10 onclick="thisTabPageShow('help/readme.htm',11)">幫助</span><br>
+			<span id=funTab8 onclick="thisTabPageShow('empty_page.htm',1,'空 頁')">空   頁</span><br>
+			<span id=funTab1 onclick="thisTabPageShow('mlbazi_pg.htm',2,'八字排盤')">八字排盤</span><br>
+			<span id=funTab2 onclick="thisTabPageShow('mlbazi_tools.htm',3,'八字工具')">八字工具</span><br>
+			<span id=funTab3 onclick="thisTabPageShow('month_calendar.htm',4,'月曆表')">月 曆 表</span><br>
+			<span id=funTab4 onclick="thisTabPageShow('qishuo_calc_pg.htm',5,'氣朔計算')">氣朔計算</span><br>
+			<span id=funTab5 onclick="thisTabPageShow('year_calendar.htm',6,'農曆年曆')">農曆年曆</span><br>
+			<span id=funTab6 onclick="thisTabPageShow('calendar_tools.htm',7,'各类工具')">各类工具</span><br>
+			<span id=funTab7 onclick="thisTabPageShow('empty_page.htm',8,'空 頁')">空   頁</span><br>
+			<span id=funTab8 onclick="thisTabPageShow('empty_page.htm',9,'空 頁')">空   頁</span><br>
+			<span id=funTab9 onclick="thisTabPageShow('nextPageNav.htm',10,'直接跳转')">直接跳转</span><br>
+			<span id=funTab10 onclick="thisTabPageShow('help/readme.htm',11,'幫助')">幫助</span><br>
 		</div>
 	</nav>
 

@@ -35,21 +35,61 @@
 
 	<!--气朔计算表-->
 	<div id=QiShuoCalcFunPG>
-		<input id=QiShuoCalcPGThisYearText type=text size=4 value=2023>年
-		<input id=QiShuoCalcNumText type=text size=4 value=360>个
-		<button onclick="shuoCalcPageShow(0)">定朔</button>
-		<button onclick="shuoCalcPageShow(90)">上弦</button>
-		<button onclick="shuoCalcPageShow(180)">定望</button>
-		<button onclick="shuoCalcPageShow(270)">下弦</button>
-		<button onclick="shuoCalcPageShow(-1)">任意月相</button>
-		<button onclick="qiCalcPageShow()">定節氣</button>
-		<button onclick="houCalcPageShow()">定候</button>
-		<button onclick="ganZhiYearPageShow()">干支年</button>
-		<button onclick="constellationPageShow()">太陽星座</button>
+		<input id=QS_ThisYearText type=text size=3 value=1900>年
+		<input id=QS_ItemNumText type=text size=2 value=1000>个
+		<input id=QS_AngleText type=text size=3 value=-76.57>°
+		<button onclick="QS_shuoCalcPageShow(0)">定朔</button>
+		<button onclick="QS_shuoCalcPageShow(90)">上弦</button>
+		<button onclick="QS_shuoCalcPageShow(180)">定望</button>
+		<button onclick="QS_shuoCalcPageShow(270)">下弦</button>
+		<button onclick="QS_shuoCalcPageShow(-1)">任意月相</button>
+		<select id=QS_JieQiCalModeList>
+			<option value=1>计算24节气</option>
+			<option value=2>计算12中气</option>
+			<option value=3>计算12节气</option>
+			<option value=4 selected>计算单节气</option>
+			<option value=5>计算年两分</option>
+			<option value=6>计算年四分</option>
+		</select>&nbsp;
+		<select id=QS_JieQiList>
+			<option value=-361>任意角度</option>
+			<option value=-90>中:冬至-90魔羯座</option>
+			<option value=-75>节:小寒</option>
+			<option value=-60>中:大寒-水瓶座</option>
+			<option value=-45 selected>节:立春-45</option>
+			<option value=-30>中:雨水-双鱼座</option>
+			<option value=-15>节:惊蛰</option>
+			<option value=0>中:春分0白羊座</option>
+			<option value=15>节:清明</option>
+			<option value=30>中:谷雨-金牛座</option>
+			<option value=45>节:立夏45</option>
+			<option value=60>中:小满-双子座</option>
+			<option value=75>节:芒种</option>
+			<option value=90>中:夏至90巨蟹座</option>
+			<option value=105>节:小暑</option>
+			<option value=120>中:大暑-狮子座</option>
+			<option value=135>节:立秋135</option>
+			<option value=150>中:处暑-处女座</option>
+			<option value=165>节:白露</option>
+			<option value=180>中:秋分180天秤座</option>
+			<option value=195>节:寒露</option>
+			<option value=210>中:霜降-天蝎座</option>
+			<option value=225>节:立冬225</option>
+			<option value=240>中:小雪-射手座</option>
+			<option value=255>节:大雪</option>
+			<option value=270>中:冬至270魔羯座</option>
+			<option value=285>节:小寒</option>
+			<option value=300>中:大寒-水瓶座</option>
+		</select>&nbsp;
+		<button onclick="QS_qiCalcPageShow()">定節氣</button>
+		<button onclick="QS_houCalcPageShow()">定候</button>
+		<button onclick="QS_earthMinRPageShow()">地球近远日点</button>
+		<button onclick="QS_ganZhiYearPageShow(year2Ayear(QS_ThisYearText.value))">公元年干支</button>
+		<button onclick="QS_constellationPageShow()">太陽星座</button>
 	</div>
 	<br><hr>
 	
-	<div id=QiShuoInfoArea style="color:#0000FF">
+	<div id=QiShuoInfoArea style="font-size: 12px; color:#0000FF">
 	</div>
 
 </body>

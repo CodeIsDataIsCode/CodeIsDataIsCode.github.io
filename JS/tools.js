@@ -1,19 +1,14 @@
 "use strict";
-//一些工具函数
 function trim(s) {
     return s.replace(/(^\s*)|(\s*$)/g, "");
 }
 Date.prototype.toLocaleString2 = function () {
     return this.getFullYear() + "-" + (this.getMonth() + 1) + "-" + this.getDate() + " " + this.getHours() + ":" + this.getMinutes() + ":" + this.getSeconds();
 };
-/****************
-天文纪年与普通纪年的转换
-//传入普通纪年或天文纪年，传回天文纪年
-****************/
 function year2Ayear(c) {
-    var y = String(c).replace(/[^0-9Bb\*-]/g, '');
-    var q = y.slice(0, 1);
-    if (q == 'B' || q == 'b' || q == '*') { //通用纪年法(公元前)
+    let y = String(c).replace(/[^0-9Bb\*-]/g, '');
+    let q = y.slice(0, 1);
+    if (q == 'B' || q == 'b' || q == '*') {
         y = 1 - y.slice(1, y.length + 1);
         if (y > 0) {
             alert('通用纪法的公元前纪法从B.C.1年开始。并且没有公元0年');
@@ -28,25 +23,18 @@ function year2Ayear(c) {
         alert('超过9999年的农历计算很不准。');
     return y;
 }
-//传入天文纪年，传回显示用的常规纪年
 function Ayear2year(yearNum) {
     let year = yearNum;
     if (year < 0) {
-        return -year;
+        return year;
     }
     ;
     {
         return year;
     }
-    /*
-    未修改前的：
-        if (y <= 0) return 'B' + (-y + 1);
-        return '' + y;
-    */
 }
-//时间串转为小时
 function timeStr2hour(s) {
-    let a, b, c;
+    let a = 0, b = 0, c = 0;
     s = String(s).replace(/[^0-9:\.]/g, '');
     s = s.split(':');
     if (s.length == 1)
@@ -57,28 +45,24 @@ function timeStr2hour(s) {
         a = s[0] - 0, b = s[1] - 0, c = s[2] - 0;
     return a + b / 60 + c / 3600;
 }
-/*********************
-工具函数：cookie读写函数
-*********************/
-var storageL = {
-    // 判断浏览器是否支持localSotrage
-    existStorage: function () {
+class _LocalStorage_ {
+    existStorage() {
         return window.Storage && window.localStorage && window.localStorage instanceof Storage;
-    },
-    // 写localStorage
-    setItem: function (name, value, t) {
+    }
+    ;
+    setItem(name, value, t = 1000) {
         if (!this.existStorage())
             this.setCookie(name, value, t);
         try {
             localStorage.setItem(name, value);
-        } //safari无痕模式下调用localStorag.setItem会出错
+        }
         catch (e) {
             console.error('localStorage.setItem错误,', e.message);
         }
-    },
-    // 读localStorage
-    getItem: function (name) {
-        var value;
+    }
+    ;
+    getItem(name) {
+        let value;
         if (!this.existStorage())
             return this.getCookie(name);
         try {
@@ -90,29 +74,28 @@ var storageL = {
         finally {
             return value;
         }
-    },
-    // 写cookie
-    setCookie: function (name, value, t) {
-        var d = new Date();
+    }
+    ;
+    setCookie(name, value, t = 1000) {
+        let d = new Date();
         d.setTime(d.getTime() + (t * 86400 * 1000));
-        var expires = "expires=" + d.toUTCString();
+        let expires = "expires=" + d.toUTCString();
         document.cookie = name + "=" + value + "; " + expires;
-    },
-    // 读cookie
-    getCookie: function (name) {
-        var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
+    }
+    ;
+    getCookie(name) {
+        let arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
         if (arr = document.cookie.match(reg))
             return arr[2];
         return null;
     }
-};
-/*********************
-给select加option等
-*********************/
-//给select对象加入option
-function addOp(sel, v, t) {
-    var Op = document.createElement("OPTION");
-    Op.value = v;
-    Op.text = t;
-    sel.add(Op);
+    ;
+}
+;
+var storageL = new _LocalStorage_();
+function addSelectOption(select, value, text) {
+    let Op = document.createElement("OPTION");
+    Op.value = value;
+    Op.text = text;
+    select.add(Op);
 }

@@ -1,7 +1,5 @@
 "use strict";
-//八字反查日期，显示組合出來的八字
 function ML_baZiQueryBaZiInfo() {
-    //ML_BaZiQueryBaZiInfoOut
     let yearGanOb = document.getElementById('ML_BaZiQueryYearZhuGanSel');
     let yearGanObIndex = yearGanOb.selectedIndex;
     let yearZhiOb = document.getElementById('ML_BaZiQueryYearZhuZhiSel');
@@ -15,52 +13,47 @@ function ML_baZiQueryBaZiInfo() {
     let timeZhiOb = document.getElementById('ML_BaZiQueryTimeZhuZhiSel');
     let timeZhiObIndex = timeZhiOb.selectedIndex;
     ML_BaZiQueryBaZiInfoOut.innerHTML = '組合的四柱為：'
-        + yinYangSysTemp.getZhuNameByGanZhiNo(ML_BaZiQueryYearZhuGanSel.value, ML_BaZiQueryYearZhuZhiSel.value) + '年  '
-        + yinYangSysTemp.getMonthZhuNameByYearGanNo(ML_BaZiQueryYearZhuGanSel.value, ML_BaZiQueryMonthZhuZhiSel.value) + '月 '
-        + yinYangSysTemp.getZhuNameByGanZhiNo(ML_BaZiQueryDayZhuGanSel.value, ML_BaZiQueryDayZhuZhiSel.value) + '日  '
-        + yinYangSysTemp.getTimeZhuNameByDayGanNo(ML_BaZiQueryDayZhuGanSel.value, ML_BaZiQueryTimeZhuZhiSel.value) + '時 <  '
-        + yinYangSysTemp.getZhuNameByGanZhiNo(ML_BaZiQueryYearZhuGanSel.value, ML_BaZiQueryYearZhuZhiSel.value)
-        + yinYangSysTemp.getMonthZhuNameByYearGanNo(ML_BaZiQueryYearZhuGanSel.value, ML_BaZiQueryMonthZhuZhiSel.value)
-        + yinYangSysTemp.getZhuNameByGanZhiNo(ML_BaZiQueryDayZhuGanSel.value, ML_BaZiQueryDayZhuZhiSel.value)
-        + yinYangSysTemp.getTimeZhuNameByDayGanNo(ML_BaZiQueryDayZhuGanSel.value, ML_BaZiQueryTimeZhuZhiSel.value) + '>';
+        + wuXingGZSys.getZhuNameByGanZhiNo(ML_BaZiQueryYearZhuGanSel.value, ML_BaZiQueryYearZhuZhiSel.value) + '年  '
+        + wuXingGZSys.getMonthZhuNameByYearGanNo(ML_BaZiQueryYearZhuGanSel.value, ML_BaZiQueryMonthZhuZhiSel.value) + '月 '
+        + wuXingGZSys.getZhuNameByGanZhiNo(ML_BaZiQueryDayZhuGanSel.value, ML_BaZiQueryDayZhuZhiSel.value) + '日  '
+        + wuXingGZSys.getTimeZhuNameByDayGanNo(ML_BaZiQueryDayZhuGanSel.value, ML_BaZiQueryTimeZhuZhiSel.value) + '時 <  '
+        + wuXingGZSys.getZhuNameByGanZhiNo(ML_BaZiQueryYearZhuGanSel.value, ML_BaZiQueryYearZhuZhiSel.value)
+        + wuXingGZSys.getMonthZhuNameByYearGanNo(ML_BaZiQueryYearZhuGanSel.value, ML_BaZiQueryMonthZhuZhiSel.value)
+        + wuXingGZSys.getZhuNameByGanZhiNo(ML_BaZiQueryDayZhuGanSel.value, ML_BaZiQueryDayZhuZhiSel.value)
+        + wuXingGZSys.getTimeZhuNameByDayGanNo(ML_BaZiQueryDayZhuGanSel.value, ML_BaZiQueryTimeZhuZhiSel.value) + '>';
 }
-//八字反查日期，页面信息显示
 function ML_baZiToDateInfoShow() {
     let startYearTemp = Number(BaZiQueryStartYear.value);
     let endYearTemp = Number(BaZiQueryEndYear.value) + 1;
     let yearZhuGanNo = Number(ML_BaZiQueryYearZhuGanSel.value);
     let yearZhuZhiNo = Number(ML_BaZiQueryYearZhuZhiSel.value);
-    let yearZhuNo = yinYangSysTemp.getZhuNoByGanZhiNo(yearZhuGanNo, yearZhuZhiNo);
-    let yearZhuName = yinYangSysTemp.getZhuNameByGanZhiNo(yearZhuGanNo, yearZhuZhiNo);
+    let yearZhuNo = wuXingGZSys.getZhuNoByGanZhiNo(yearZhuGanNo, yearZhuZhiNo);
+    let yearZhuName = wuXingGZSys.getZhuNameByGanZhiNo(yearZhuGanNo, yearZhuZhiNo);
     let monthZhuZhiNo = Number(ML_BaZiQueryMonthZhuZhiSel.value);
-    let monthZhuNo = yinYangSysTemp.getMonthZhuNoByYearGanNo(yearZhuGanNo, monthZhuZhiNo);
-    let monthZhuName = yinYangSysTemp.getMonthZhuNameByYearGanNo(yearZhuGanNo, monthZhuZhiNo);
+    let monthZhuNo = wuXingGZSys.getMonthZhuNoByYearGanNo(yearZhuGanNo, monthZhuZhiNo);
+    let monthZhuName = wuXingGZSys.getMonthZhuNameByYearGanNo(yearZhuGanNo, monthZhuZhiNo);
     let dayZhuGanNo = Number(ML_BaZiQueryDayZhuGanSel.value);
     let dayZhuZhiNo = Number(ML_BaZiQueryDayZhuZhiSel.value);
-    let dayZhuNo = yinYangSysTemp.getZhuNoByGanZhiNo(dayZhuGanNo, dayZhuZhiNo);
-    let dayZhuName = yinYangSysTemp.getZhuNameByGanZhiNo(dayZhuGanNo, dayZhuZhiNo);
+    let dayZhuNo = wuXingGZSys.getZhuNoByGanZhiNo(dayZhuGanNo, dayZhuZhiNo);
+    let dayZhuName = wuXingGZSys.getZhuNameByGanZhiNo(dayZhuGanNo, dayZhuZhiNo);
     let timeZhuZhiNo = Number(ML_BaZiQueryTimeZhuZhiSel.value);
-    let timeZhuNo = yinYangSysTemp.getTimeZhuNoByDayGanNo(dayZhuGanNo, timeZhuZhiNo);
-    let timeZhuName = yinYangSysTemp.getTimeZhuNameByDayGanNo(dayZhuGanNo, timeZhuZhiNo);
-    //JD = 0(-0.5416667；0-13/24) 癸丑日50号 -4712/1/1 12:00:00
+    let timeZhuNo = wuXingGZSys.getTimeZhuNoByDayGanNo(dayZhuGanNo, timeZhuZhiNo);
+    let timeZhuName = wuXingGZSys.getTimeZhuNameByDayGanNo(dayZhuGanNo, timeZhuZhiNo);
     let dayStrTemp = "";
     let dayNumTemp = [0];
     let thisJD = baZiInfo.baZiToDateCal(yearZhuNo, monthZhuZhiNo, dayZhuNo, timeZhuZhiNo, startYearTemp, endYearTemp);
     let thisJDStr = "";
-    //生成时间串
     for (let i = 0; i < thisJD.length; i++) {
-        thisJDStr += (i + 1) + ",JD=" + Number(thisJD[i]).toFixed(3) + ",日期：" + JD.JD2str(thisJD[i]) + "<br>";
+        thisJDStr += (i + 1) + ",JD=" + Number(thisJD[i]).toFixed(3) + ",日期：" + JD.JD2str(thisJD[i]).fullStr0 + "<br>";
     }
     let titleTemp = yearZhuNo + yearZhuName + "年/" + monthZhuNo + monthZhuName
         + "月/" + dayZhuNo + dayZhuName + "日/" + timeZhuNo + timeZhuName
         + "時,   共查到：" + thisJD.length + "组日期组合<br><hr>";
-    ML_BaZiToDateInfoOut.innerHTML = titleTemp + thisJDStr + "<br><hr>"; //"<br>" +
+    ML_BaZiToDateInfoOut.innerHTML = titleTemp + thisJDStr + "<br><hr>";
 }
-//清空八字反查信息
 function ML_baZiToDateInfoCls() {
     ML_BaZiToDateInfoOut.innerHTML = "<br><hr>";
 }
-//年柱天干变化时
 function ML_baZiQueryYearZhuGanSelChange() {
     let selCtrlTemp = document.getElementById("ML_BaZiQueryYearZhuZhiSel");
     let selCtrlLength = selCtrlTemp.length;
@@ -93,7 +86,6 @@ function ML_baZiQueryYearZhuGanSelChange() {
         optionTemp6.text = "戌年";
         optionTemp6.value = 11;
         selCtrlTemp.add(optionTemp6);
-        //selCtrlTemp.value 	= 1;
     }
     else {
         optionTemp1.text = "丑年";
@@ -114,11 +106,9 @@ function ML_baZiQueryYearZhuGanSelChange() {
         optionTemp6.text = "亥年";
         optionTemp6.value = 12;
         selCtrlTemp.add(optionTemp6);
-        //selCtrlTemp.selected = true; 	= 2;
     }
     optionTemp2.selected = true;
 }
-//日柱天干变化时
 function ML_baZiQueryDayZhuGanSelChange() {
     let selCtrlTemp = document.getElementById("ML_BaZiQueryDayZhuZhiSel");
     let selCtrlLength = selCtrlTemp.length;
@@ -172,6 +162,5 @@ function ML_baZiQueryDayZhuGanSelChange() {
         optionTemp6.value = 12;
         selCtrlTemp.add(optionTemp6);
     }
-    //selCtrlTemp.selectedIndex 	= "0";
     optionTemp2.selected = true;
 }

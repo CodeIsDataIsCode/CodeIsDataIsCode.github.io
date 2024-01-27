@@ -28,7 +28,7 @@
 	<script src=./JS/lunar_Fun.js></script> <!--	日历物件、农历核心模块	-->
 	<script src=./JS/GEOInfo.js></script> <!--	全国城市经纬数据库及皇帝纪年数据库	-->
 
-	<script src=./JS/yinYangSystemInfo.js></script><!--	阴阳五行系统相关函数	-->
+	<script src=./JS/wuXingGanZhiSystem.js></script><!--	阴阳五行系统相关函数	-->
 	<script src=./JS/sanYuanJiuYunInfo.js></script><!--	三元九运系统相关函数	-->
 
 	<script src=./JS/mlbazi_Fun.js></script> <!--	首頁顯示相關的	-->
@@ -133,7 +133,7 @@
 
 	<!--	通过八字反查日期信息 -->
 	<div class=dBot2>起止年:
-		<input type=text id="BaZiQueryStartYear" size="5" value="1800">~
+		<input type=text id="BaZiQueryStartYear" size="5" value="1500">~
 		<input type=text id="BaZiQueryEndYear" size="5" value="2050">&nbsp;
 		<select id=ML_BaZiQueryYearZhuGanSel class=tianGanSel onchange="ML_baZiQueryYearZhuGanSelChange();">
 			<option value=1 selected>甲</option>
@@ -204,8 +204,8 @@
 			<option value=12>亥时21-23</option>
 			<option value=13>晚子23-00</option>
 		</select>
-		<input id=ML_BaZiQueryHemispheresSel type="checkbox" checked>北半球生/南半球生
-		<button onclick="ML_baZiQueryBaZiInfo();ML_baZiToDateInfoShow()">八字反查日期</button>
+		<input id=ML_BaZiQueryHemispheresSel type="checkbox" checked>北/南半球生
+		<button onclick="ML_baZiQueryBaZiInfo();ML_baZiToDateInfoShow()">反查日期</button>
 		<button onclick="ML_baZiToDateInfoCls()">清空</button>
 		<br>
 	</div><br>
@@ -213,9 +213,7 @@
 	<!-- 八字反查日期結果顯示區域 -->
 	<div id=ML_BaZiQueryBaZiInfoOut>組合的四柱為：</div><hr>
 	<div id=ML_BaZiToDateInfoOutRow>
-		<span id=ML_BaZiToDateInfoOut>
-			<hr>
-		</span>
+		<span id=ML_BaZiToDateInfoOut><hr></span>
 	</div>
 
 </body>

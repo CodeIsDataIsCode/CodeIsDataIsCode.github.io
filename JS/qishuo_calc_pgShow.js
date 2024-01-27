@@ -1,35 +1,27 @@
 "use strict";
-//====================气朔表===================
-//定朔测试函数
-function shuoCalcPageShow(angle) {
-    //任意角度
+function QS_shuoCalcPageShow(angle) {
     if (angle == -1)
-        angle = prompt("请输入角度(0朔,90上弦,180望,270下弦,或其它):", 0) - 0;
+        angle = parseFloat(QS_AngleText.value);
     let earthMoonDist, T, shuoMonthNo;
-    let dateDelimiter = ','; //jd数值 和 日期之间的分隔符
-    //var s = "月-日黄经差"+jiao+"<br>";
-    let headStr = "<br>" + angle.toString() + "度朔望JD值" + dateDelimiter + "年" + "-月" + "-日" + dateDelimiter + "时" + "<br>";
-    let s2 = "";
-    let y = year2Ayear(QiShuoCalcPGThisYearText.value) - 2000; //从2000年开始的年数
-    let countNum = QiShuoCalcNumText.value - 0; //共计算多少组数据
-    let thisYearShuoNo = int2(y * (365.2422 / 29.53058886)); //截止当年首经历朔望的个数
-    let jdShuo = 0; //当前朔望的JD数值
-    let lastShuoJD = 0; //上一个朔望JD数值
-    let JD_Diff = 0; //两个JD之间的差值
+    let dateDelimiter = ',';
+    let headStr = angle.toString() + "度朔望JD值" + dateDelimiter + "年" + "-月" + "-日" + dateDelimiter + "时" + "<br>";
+    let s2 = " ";
+    let y = year2Ayear(QS_ThisYearText.value) - 2000;
+    let countNum = QS_ItemNumText.value - 0;
+    let thisYearShuoNo = int2((y * 365.2422) / 29.53058886);
+    let jdShuo = 0;
+    let lastShuoJD = 0;
+    let JD_Diff = 0;
     for (let i = 0; i < countNum; i++) {
-        T = Sun_Moon_Ephemeris.MS_aLon_t((thisYearShuoNo + i + angle / 360) * 2 * Math.PI); //精确时间计算,入口参数是当年各朔望黄经
-        earthMoonDist = XL1_calc(2, T, -1); //计算月亮和地球之间的距离
-        jdShuo = (T * 36525 + J2000 + 8 / 24 - dt_T(T * 36525)); //转化为北京时间
+        T = Sun_Moon_Ephemeris.MS_aLon_t((thisYearShuoNo + i + angle / 360) * 2 * Math.PI);
+        earthMoonDist = XL1_calc(2, T, -1);
+        jdShuo = (T * 36525 + J2000 + 8 / 24 - dt_T(T * 36525));
         if (i > 0)
             JD_Diff = jdShuo - lastShuoJD;
-        shuoMonthNo = getShuoMonthNo(jdShuo); //朔月所在的编号,从BC4713开始
-        //s2 += jdShuo.toString()+','+JD.JD2str( jdShuo )+','+r.toFixed(2)+"千米<br>";
-        //日期转为字串    .toFixed()和.toString()的区别,.toFixed(5),可调整输出小数点位数，最高16位
-        //在输出时间和纪年信息长度上不同
-        //s2 += shuoMonthNo + '号朔月,' + jdShuo.toFixed(5) + dateDelimiter + JD.JD2str(jdShuo);
-        s2 += shuoMonthNo + '号朔月,' + jdShuo.toFixed(5) + dateDelimiter + JD.JD2str(jdShuo).slice(0, 21);
-        s2 += ' (' + JD_Diff.toFixed(5) + ')'; //输出上下两个的长度 29.53058886
-        s2 += '/L=' + earthMoonDist.toFixed(0) + "Km"; //地月之间的距离，去掉+earthMoonDist.toFixed(2)+"千米
+        shuoMonthNo = getShuoMonthNo(jdShuo);
+        s2 += shuoMonthNo + '号朔月,' + jdShuo.toFixed(5) + dateDelimiter + JD.JD2str(jdShuo).dateTimeStr;
+        s2 += ' (' + JD_Diff.toFixed(5) + ')';
+        s2 += '/L=' + earthMoonDist.toFixed(0) + "Km";
         s2 += "<br>";
         if (i % 50 == 0) {
             headStr += s2;
@@ -39,71 +31,228 @@ function shuoCalcPageShow(angle) {
     }
     QiShuoInfoArea.innerHTML = headStr + s2;
 }
-//定气测试函数，计算和显示24节气的函数
-//立春315°，雨水330°，惊蛰345°，春分0°，清明15°
-function qiCalcPageShow() {
-    let T;
-    let headStr = ""; //"-------<br>"
+function QS_qiCalcPageShow() {
+    let T, lastT, nextT, W;
+    let funNo = Number(QS_JieQiCalModeList.value);
+    let headStr = "";
     let qiInfoStr = "";
-    let titleStr = "定24节气表<br><hr>";
-    let yearFrom2k = year2Ayear(QiShuoCalcPGThisYearText.value) - 2000; //从2000为纪元0年起点
-    let allNum = parseInt(QiShuoCalcNumText.value);
-    let jdTemp = 0;
-    for (let i = 0; i < allNum; i++) {
-        //精确节气时间计算，日月星历基本函数类：已知太阳视黄经反求时间，春分为0°，立春为-45°
-        T = Sun_Moon_Ephemeris.S_aLon_t((yearFrom2k + (i - 3) * 15 / 360 + 1) * 2 * Math.PI);
-        jdTemp = T * 36525 + J2000 + 8 / 24 - dt_T(T * 36525); //转化为北京时间
-        qiInfoStr += jdTemp.toFixed(16) + ',' + JD.JD2str(jdTemp) + ',' + jieQiName[(i + 3) % 24]; //日期转为字串
-        //if(i%2==1) s2+=' 视黄经'+(i*15)+'<br>';//输出两个节气
-        //if((i+8)%24==1) s2+=',U<br>';
-        //调节哪个节气在第一
-        qiInfoStr += '<br>';
-        //	else s2+=',  '
-        if (i % 50 == 0) {
-            headStr += qiInfoStr;
-            qiInfoStr = "";
+    let titleStr = "定24节气表：JD----公历日期----公历日期字符串----节气名----视黄经<br><hr>";
+    let year = year2Ayear(QS_ThisYearText.value);
+    let yearFrom2k = year - 2000;
+    let allNum = parseInt(QS_ItemNumText.value);
+    let jdTemp, lastJD, lastJD1, nextJD1;
+    let huangLong = 0;
+    let dt_JD = 0, dt_JD1 = 0, dt_JD2 = 0, dt_JD3 = 0;
+    let last_dt_JD = 0;
+    let huangLongStart = (year + 4712) * 360;
+    let thisLong = parseFloat(QS_JieQiList.value);
+    if (thisLong == -361) {
+        thisLong = (parseFloat(QS_AngleText.value)) % 360;
+    }
+    if (funNo == 1) {
+        for (let i = 0; i < allNum; i++) {
+            T = Sun_Moon_Ephemeris.S_aLon_t((yearFrom2k + (i - 6) * 15 / 360 + 1) * 2 * Math.PI);
+            jdTemp = T * 36525 + J2000 - dt_T(T * 36525);
+            if (i == 0) {
+                dt_JD = 0;
+            }
+            else {
+                dt_JD = jdTemp - lastJD;
+            }
+            lastJD = jdTemp;
+            huangLong = i * 15 - 90 + huangLongStart;
+            W = Math.floor(huangLong / 360);
+            qiInfoStr += jieQiName[(i) % 24] + ',' + jdTemp.toFixed(16) + ',(差：' + dt_JD.toFixed(3)
+                + '),<font style="font-size: 12px; color:#FF0000">' + JD.JD2str(jdTemp, 8, 0).fullStr1
+                + '</font>（视黄经：' + huangLong + '° / ' + W + '圈' + (huangLong % 360 + 360) % 360 + '°）' + '<br>';
+        }
+    }
+    else if (funNo == 2) {
+        for (let i = 0; i < allNum; i++) {
+            T = Sun_Moon_Ephemeris.S_aLon_t((yearFrom2k + (i - 3) * 30 / 360 + 1) * 2 * Math.PI);
+            jdTemp = T * 36525 + J2000 - dt_T(T * 36525);
+            if (i == 0) {
+                dt_JD = 0;
+            }
+            else {
+                dt_JD = jdTemp - lastJD;
+            }
+            lastJD = jdTemp;
+            huangLong = i * 15 - 90 + huangLongStart;
+            W = Math.floor(huangLong / 360);
+            qiInfoStr += jieQiName[(2 * i) % 24] + ',' + jdTemp.toFixed(16) + ',(差：' + dt_JD.toFixed(3)
+                + '),<font style="font-size: 12px; color:#FF0000">' + JD.JD2str(jdTemp, 8).fullStr0
+                + '</font>（视黄经：' + huangLong + '° / ' + W + '圈' + (huangLong % 360 + 360) % 360 + '°）' + '<br>';
+        }
+    }
+    else if (funNo == 3) {
+        for (let i = 0; i < allNum; i++) {
+            T = Sun_Moon_Ephemeris.S_aLon_t((yearFrom2k + ((i - 3) * 30 + 15) / 360 + 1) * 2 * Math.PI);
+            jdTemp = T * 36525 + J2000 - dt_T(T * 36525);
+            if (i == 0) {
+                dt_JD = 0;
+            }
+            else {
+                dt_JD = jdTemp - lastJD;
+            }
+            lastJD = jdTemp;
+            huangLong = i * 15 - 90 + huangLongStart;
+            W = Math.floor(huangLong / 360);
+            qiInfoStr += jieQiName[(2 * i + 1) % 24] + ',' + jdTemp.toFixed(16) + ',(差：' + dt_JD.toFixed(3)
+                + '),<font style="font-size: 12px; color:#FF0000">' + JD.JD2str(jdTemp, 8, 0).fullStr0
+                + '</font>（视黄经：' + huangLong + '° / ' + W + '圈' + (huangLong % 360 + 360) % 360 + '°）' + '<br>';
+        }
+    }
+    else if (funNo == 4) {
+        for (let i = 0; i < allNum; i++) {
+            T = Sun_Moon_Ephemeris.S_aLon_t((yearFrom2k + (i * 360 + thisLong) / 360 + 1) * 2 * Math.PI);
+            jdTemp = T * 36525 + J2000 - dt_T(T * 36525);
+            lastT = Sun_Moon_Ephemeris.S_aLon_t((yearFrom2k + (i * 360 - 15 + thisLong) / 360 + 1) * 2 * Math.PI);
+            lastJD1 = lastT * 36525 + J2000 - dt_T(lastT * 36525);
+            nextT = Sun_Moon_Ephemeris.S_aLon_t((yearFrom2k + (i * 360 + 15 + thisLong) / 360 + 1) * 2 * Math.PI);
+            nextJD1 = nextT * 36525 + J2000 - dt_T(nextT * 36525);
+            if (i == 0) {
+                dt_JD = 0;
+            }
+            else {
+                dt_JD = jdTemp - lastJD;
+            }
+            lastJD = jdTemp;
+            dt_JD1 = jdTemp - lastJD1;
+            dt_JD2 = nextJD1 - jdTemp;
+            dt_JD3 = nextJD1 - lastJD1;
+            huangLong = i * 360 + thisLong + huangLongStart;
+            W = year + 4713 + i;
+            qiInfoStr += jdTemp.toFixed(16) + ',(差：' + dt_JD.toFixed(5) + '/' + dt_JD1.toFixed(4) + '/' + dt_JD2.toFixed(4)
+                + '/' + dt_JD3.toFixed(5) + '),<font style="font-size: 12px; color:#FF0000">'
+                + JD.JD2str(jdTemp, 8, 0).fullStr1 + '</font>,（视黄经：' + huangLong + '° / ' + W + '圈' + thisLong + '°）' + '<br>';
+        }
+    }
+    else if (funNo == 5) {
+        for (let i = 0; i < allNum; i++) {
+            T = Sun_Moon_Ephemeris.S_aLon_t((yearFrom2k + (i * 180 + thisLong) / 360 + 1) * 2 * Math.PI);
+            jdTemp = T * 36525 + J2000 - dt_T(T * 36525);
+            lastT = Sun_Moon_Ephemeris.S_aLon_t((yearFrom2k + (i * 180 - 180 + thisLong) / 360 + 1) * 2 * Math.PI);
+            lastJD1 = lastT * 36525 + J2000 - dt_T(lastT * 36525);
+            dt_JD = jdTemp - lastJD1;
+            if (i > 0) {
+                dt_JD1 = dt_JD - last_dt_JD;
+            }
+            else {
+                dt_JD1 = 0;
+            }
+            last_dt_JD = dt_JD;
+            huangLong = i * 180 + thisLong + huangLongStart;
+            W = year + 4713 + i;
+            qiInfoStr += jieQiName[(12 * i + 30 + int2(thisLong / 15)) % 24] + ',' + jdTemp.toFixed(16) + ',(差：' + dt_JD.toFixed(4)
+                + ' / ' + dt_JD1.toFixed(4) + '),<font style="font-size: 12px; color:#FF0000">'
+                + JD.JD2str(jdTemp, 8, 0).fullStr1 + '</font>,（视黄经：' + huangLong + '° / ' + W + '圈' + huangLong % 360 + '°）'
+                + '<br>';
+        }
+    }
+    else if (funNo == 6) {
+        for (let i = 0; i < allNum; i++) {
+            T = Sun_Moon_Ephemeris.S_aLon_t((yearFrom2k + (i * 90 + thisLong) / 360 + 1) * 2 * Math.PI);
+            jdTemp = T * 36525 + J2000 - dt_T(T * 36525);
+            if (i == 0) {
+                dt_JD = 0;
+                dt_JD1 = 0;
+            }
+            else {
+                dt_JD = jdTemp - lastJD;
+                dt_JD1 = dt_JD - last_dt_JD;
+            }
+            lastJD = jdTemp;
+            last_dt_JD = dt_JD;
+            huangLong = i * 90 + thisLong + huangLongStart;
+            W = year + 4713 + i;
+            qiInfoStr += jieQiName[(6 * i + 30 + int2(thisLong / 15)) % 24] + ',' + jdTemp.toFixed(16) + ',(差：' + dt_JD.toFixed(4)
+                + ' / ' + dt_JD1.toFixed(4) + '),<font style="font-size: 12px; color:#FF0000">'
+                + JD.JD2str(jdTemp, 8, 0).fullStr1 + '</font>,（视黄经：' + huangLong + '° / ' + W + '圈' + huangLong % 360 + '°）'
+                + '<br>';
         }
     }
     QiShuoInfoArea.innerHTML = titleStr + headStr + qiInfoStr;
 }
-//干支年的开始日期
-function ganZhiYearPageShow() {
-    let i;
+function QS_earthMinRPageShow() {
+    let titleStr = "近日点：JD(近日点年长，冬至JD差)----近日点公历日期(两点之差JD长)----远日点公历日期(两点半径大小)--<br><hr>";
+    let infoStr = "";
+    let headStr = "";
+    let year = year2Ayear(QS_ThisYearText.value);
+    let yearFrom2k = year - 2000;
+    let T_From2k = yearFrom2k / 100.0;
+    let T_JieQi = 0, dt_JD = 0, dt_JD1 = 0, dt_JD_JieQi = 0;
+    let allNum = parseInt(QS_ItemNumText.value);
+    let perihelionData = new Array(0, 1);
+    let aphelionData = new Array(0, 1);
+    let jd0 = 0, jd1 = 0, jd_JieQi = 0;
+    let last_JD0 = 0;
+    let dist0 = 0, dist1 = 0, dist3 = 0;
+    for (let i = 0; i < allNum; i++) {
+        perihelionData = Sun_Moon_Ephemeris.earthMinR(T_From2k + (i + 0.4) / 100.0, true);
+        aphelionData = Sun_Moon_Ephemeris.earthMinR(T_From2k + (i + 0.6) / 100.0, false);
+        T_JieQi = Sun_Moon_Ephemeris.S_aLon_t((yearFrom2k + (i * 360 - 90) / 360.0 + 1.0) * 2 * Math.PI);
+        jd_JieQi = T_JieQi * 36525 + J2000 - dt_T(T_JieQi * 36525);
+        jd0 = perihelionData[0] * 36525 + J2000 - dt_T(perihelionData[0] * 36525);
+        dist0 = perihelionData[1];
+        jd1 = aphelionData[0] * 36525 + J2000 - dt_T(aphelionData[0] * 36525);
+        dist1 = aphelionData[1];
+        dt_JD_JieQi = jd0 - jd_JieQi;
+        dt_JD1 = jd1 - jd0;
+        dist3 = dist0 + dist1;
+        if (i == 0) {
+            dt_JD = 0;
+        }
+        else {
+            dt_JD = jd0 - last_JD0;
+        }
+        last_JD0 = jd0;
+        infoStr += jd0.toFixed(16) + '(差：' + dt_JD.toFixed(5) + ',冬至差：' + dt_JD_JieQi.toFixed(5) + '), ' + JD.JD2str(jd0, 0, 0).dateTimeStr
+            + ' ,(' + dt_JD1.toFixed(5) + '),   ' + JD.JD2str(jd1, 0, 0).fullStr1
+            + '(' + dist0.toFixed(5) + ' / ' + dist1.toFixed(5) + ' / ' + dist3.toFixed(7) + ")<br>";
+    }
+    QiShuoInfoArea.innerHTML = titleStr + headStr + infoStr;
+}
+function QS_ganZhiYearPageShow(year) {
     let T;
-    let headStr = "-------<br>";
+    let titleStr = "定基督纪年年干支（立春节气点）的开始日期表<br><hr>";
+    let headStr = "----<以立春节气点定寅月>----<br>";
     let s2 = "";
-    let titleStr = "<br>定干支年的开始日期表<br><hr>";
-    let yearFrom2k = year2Ayear(QiShuoCalcPGThisYearText.value) - 2000.0; //从2000为纪元0年起点
-    let allNum = parseInt(QiShuoCalcNumText.value);
+    let yearFrom2k = year - 2000.0;
+    let allNum = parseInt(QS_ItemNumText.value);
     let jdTemp = 0;
-    for (i = 0; i < allNum; i++) {
-        T = Sun_Moon_Ephemeris.S_aLon_t((yearFrom2k + i + 0.87500) * 2 * Math.PI); //0.875 = 1 - 45/360
+    for (let i = 0; i < allNum; i++) {
+        T = Sun_Moon_Ephemeris.S_aLon_t((yearFrom2k + i + 0.87500) * 2 * Math.PI);
         jdTemp = T * 36525 + J2000 + 8 / 24 - dt_T(T * 36525);
-        s2 += jdTemp.toFixed(16) + ',' + JD.JD2str(jdTemp) + ",立春寅月"; //日期转为字串
-        s2 += '<br>';
+        s2 += JD.getYearGanZhi(year + i).LCYName2 + JD.getYMD2MGanZhi(year + i).MGanZhiName + ', ';
+        s2 += jdTemp.toFixed(16) + ',' + JD.JD2str(jdTemp).fullStr0 + '<br>';
         if (i % 50 == 0) {
             headStr += s2;
             s2 = "";
         }
     }
     QiShuoInfoArea.innerHTML = titleStr + headStr + s2;
-    ;
 }
-//定候测试函数
-function houCalcPageShow() {
-    var i, T;
-    let headStr = '&nbsp;&nbsp;&nbsp;&nbsp;初候　　　　　　　　　　　　二候　　　　　　　　　三候';
-    let s2 = '';
-    let y = year2Ayear(QiShuoCalcPGThisYearText.value) - 2000;
-    let n = QiShuoCalcNumText.value - 0;
-    for (i = 0; i < n * 3; i++) {
-        //精确节气时间计算
-        T = Sun_Moon_Ephemeris.S_aLon_t((y + i * 5 / 360 + 1) * 2 * Math.PI);
+function QS_houCalcPageShow() {
+    let T = 0;
+    let headStr = '&nbsp;&nbsp;&nbsp;&nbsp;初候　　　　　　　　　　　　　　二候　　　　　　　　　　　　三候';
+    let s1 = '', s2 = '';
+    let year = year2Ayear(QS_ThisYearText.value) - 2000;
+    let n = QS_ItemNumText.value - 0;
+    let JDtemp = 0, lastJD = 0, dt_JD = 0;
+    for (let i = 0; i < n * 3; i++) {
+        T = Sun_Moon_Ephemeris.S_aLon_t((year + i * 5 / 360 + 1) * 2 * Math.PI);
+        JDtemp = T * 36525 + J2000 + 8 / 24 - dt_T(T * 36525);
+        s1 = JD.JD2str(JDtemp).fullStr0;
+        if (i > 0) {
+            dt_JD = JDtemp - lastJD;
+        }
+        lastJD = JDtemp;
         if (i % 3 == 0)
-            s2 += '<br>' + jieQiName[(i / 3 + 6) % 24];
+            s2 += '<br>' + s1.slice(0, 5) + '年, ' + jieQiName[(i / 3 + 6) % 24] + ', ';
         else
             s2 += '　';
-        s2 += JD.JD2str(T * 36525 + J2000 + 8 / 24 - dt_T(T * 36525)); //日期转为字串
+        s2 += s1.slice(6, 21) + '(差：' + dt_JD.toFixed(5) + '), ';
         if (i % 50 == 0) {
             headStr += s2;
             s2 = "";
@@ -111,22 +260,26 @@ function houCalcPageShow() {
     }
     QiShuoInfoArea.innerHTML = headStr + s2;
 }
-//查詢每年的十二星座开始的日期
-function constellationPageShow() {
-    let i;
+function QS_constellationPageShow() {
     let T;
     let headStr = "-------<br>";
     let s2 = "";
-    let titleStr = "<br>定特定太阳星座的干支年的开始日期表<br><hr>";
-    let yearFrom2k = year2Ayear(QiShuoCalcPGThisYearText.value) - 2000.0; //从2000为纪元0年起点
-    let allNum = parseInt(QiShuoCalcNumText.value);
-    let jdTemp = 0;
-    for (i = 0; i < allNum; i++) {
-        T = Sun_Moon_Ephemeris.S_aLon_t((yearFrom2k + (i - 3) * 30 / 360 + 1) * 2 * Math.PI); //如果只是要某个特定的星座，
-        //T = Sun_Moon_Ephemeris.S_aLon_t( (yearFrom2k  + i + 30/360 + 1 )*2*Math.PI );//30是其起始角
+    let titleStr = "定特定太阳星座(黄道十二星座)的干支年的开始日期表<br><hr>";
+    let yearFrom2k = year2Ayear(QS_ThisYearText.value) - 2000.0;
+    let allNum = parseInt(QS_ItemNumText.value);
+    let jdTemp = 0, lastJD = 0, dt_JD = 0;
+    for (let i = 0; i < allNum; i++) {
+        T = Sun_Moon_Ephemeris.S_aLon_t((yearFrom2k + (i - 3) * 30 / 360 + 1) * 2 * Math.PI);
         jdTemp = T * 36525 + J2000 + 8 / 24 - dt_T(T * 36525);
-        s2 += jdTemp.toFixed(16) + ',' + JD.JD2str(jdTemp) + "," + constellationFullName[i % 12]; //日期转为字串
+        if (i == 0) {
+            dt_JD = 0;
+        }
+        else {
+            dt_JD = jdTemp - lastJD;
+        }
+        s2 += constellationFullName[i % 12] + ",  " + jdTemp.toFixed(16) + '(差:' + dt_JD.toFixed(4) + '),' + JD.JD2str(jdTemp).fullStr0;
         s2 += '<br>';
+        lastJD = jdTemp;
         if (i % 50 == 0) {
             headStr += s2;
             s2 = "";

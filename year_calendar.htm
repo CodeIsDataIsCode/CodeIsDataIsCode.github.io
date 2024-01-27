@@ -26,7 +26,7 @@
 		<script src=./JS/lunar_Fun.js></script>	<!--	日历物件、农历核心模块	-->
 		<script src=./JS/GEOInfo.js></script>	<!--	全国城市经纬数据库及皇帝纪年数据库	-->
 
-		<script src=./JS/yinYangSystemInfo.js></script><!--	阴阳五行系统相关函数	-->
+		<script src=./JS/wuXingGanZhiSystem.js></script><!--	阴阳五行系统相关函数	-->
 		<script src=./JS/sanYuanJiuYunInfo.js></script><!--	三元九运系统相关函数	-->
 	
 
@@ -37,15 +37,16 @@
 <body  class="headStyle">
 
 
-	公元：<input id=YearCalYearText type=text size=4 value=1980>年
+	公元：<input id=YearCalYearText type=text size=4 value=1900>年
 	<input id=YearCalInfoOption type=checkbox checked>時刻/干支&nbsp;
-	<button onclick="getNianLi(0)">計算</button>
-	<button onclick="getNianLi(-1)">-年</button>
-	<button onclick="getNianLi(1)">+年</button>&nbsp;
-	多年数：<input id=YearCalYearNumText type=text size=2 value=30>
-	<button onclick="getNianLiN()">多年</button>
+	<button onclick="YC_getNianLi(0)">計算</button>
+	<button onclick="YC_getNianLi(-1)">上年</button>
+	<button onclick="YC_getNianLi(1)">下年</button>&nbsp;
+	计算：<input id=YearCalYearNumText type=text size=2 value=300>
+	<button onclick="YC_getNianLiN(year2Ayear(YearCalYearText.value),parseInt(YearCalYearNumText.value))">多年</button><hr>
+	<div style="font-size: 14px;color: #ff0022;">注：平气法确定的历书日期(括号内为使用的定气法计算的日期)。</div>
 	<hr>
-	<div id=YearCalOutArea></div>
+	<div id=YearCalOutArea style="font-size: 14px;"></div>
 
 
 

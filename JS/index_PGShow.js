@@ -1,47 +1,45 @@
 "use strict";
-var funTabPGNo_Selt = 1; //	當前是哪個tab頁面被顯示
-/****************
-外地时间选择
-****************/
-//国家或地区改变
+var funTabPGNo_Selt = 1;
 function regionSelChange() {
-    let i;
     let timeZoneInfoTemp = RegionSel.options[RegionSel.selectedIndex].value;
     timeZoneInfoTemp = timeZoneInfoTemp.split('#');
-    RegionSel.v = timeZoneInfoTemp[0]; //地区时差
-    RegionSel.rg = timeZoneInfoTemp[1]; //日光节约参数
+    RegionSel.v = timeZoneInfoTemp[0];
+    RegionSel.rg = timeZoneInfoTemp[1];
     curSeltTimeZone = RegionSel.v;
     curSeltDST = RegionSel.rg;
     TimeZoneText.value = curSeltTimeZone;
-    //夏令时时区，选择为非
     if (RegionSel.rg) {
         CB_DST.checked = false;
     }
     else {
         CB_DST.checked = true;
     }
-    //console.log("regionSelChange()选择的时区："+curSeltTimeZone+"/夏令时:"+(curSeltDST?'是':'非'));
-    TimeZoneInfoShowArea.innerHTML = timeZoneInfoTemp[2]; //时区说明
+    TimeZoneInfoShowArea.innerHTML = timeZoneInfoTemp[2];
+    let continentSelId = document.getElementById("ContinentSel");
+    let regionSelId = document.getElementById("RegionSel");
+    storageL.setItem('continentSelNo', ContinentSel.selectedIndex, 1000);
+    storageL.setItem('continentSelName', continentSelId.options[ContinentSel.selectedIndex].text, 1000);
+    storageL.setItem('regionSelNo', RegionSel.selectedIndex, 1000);
+    storageL.setItem('regionSelName', regionSelId.options[RegionSel.selectedIndex].text, 1000);
+    storageL.setItem('TimeZoneValue', curSeltTimeZone, 1000);
+    storageL.setItem('curSeltDST', curSeltDST ? '1' : '0', 1000);
+    storageL.setItem('curSeltDSTName', curSeltDST ? '夏令时' : '非夏令时', 1000);
+    storageL.setItem('TimeZoneName', timeZoneInfoTemp[2] + '时区', 1000);
 }
-//大陆洲别改变
 function continentSelChange() {
-    let i, ob = GlobalTimeZoneArr[ContinentSel.options[ContinentSel.selectedIndex].value - 0]; //某洲数组
+    let ob = GlobalTimeZoneArr[ContinentSel.options[ContinentSel.selectedIndex].value - 0];
     RegionSel.length = 0;
-    for (i = 1; i < ob.length; i += 2)
-        addOp(RegionSel, ob[i + 1], ob[i]);
+    for (let i = 1; i < ob.length; i += 2)
+        addSelectOption(RegionSel, ob[i + 1], ob[i]);
     regionSelChange();
 }
-//时区输入的时候
 function timeZoneTextIn() {
     console.log("timeZoneTextIn()输入为：" + TimeZoneText.value);
     curSeltTimeZone = Number(TimeZoneText.value);
 }
-//年份变化时候，执行的函数
 function yearChange(yearNum) {
-    //var thisYear = year2Ayear(ThisYearText.value);
     let yearTemp = yearNum;
     let monthTemp = ThisMonthSel.value - 0;
-    //console.log('yearChange()年:'+ yearNum+'/' + monthTemp+ '||'+yearTemp);
     if ((yearTemp <= -10000)) {
         alert('yearChange()年数值小于公元前10000年，无法显示日历！');
         return;
@@ -52,28 +50,31 @@ function yearChange(yearNum) {
     }
     else {
         thisYearSelInit(yearTemp);
-        ThisYearText.value = Ayear2year(yearTemp);
+        ThisYearText.value = yearTemp;
     }
-    //thisYearIsOK();	//年的改变最后都要调用这个函数
     console.log('yearChange()年:' + yearNum + '/' + monthTemp + '||' + ThisMonthSel.value);
-    getLunarMonthPG(yearNum, monthTemp);
+    MC_getLunarMonthPG(yearNum, monthTemp);
+    storageThisDate();
 }
-//改变年份的选择按钮变化时
+function storageThisDate() {
+    storageL.setItem('ThisSelCalendar', WhatCalendarSel.value, 1000);
+    storageL.setItem('ThisSelYear', ThisYearText.value, 1000);
+    storageL.setItem('ThisSelLeapMonth', ThisLeapMonthSel.value, 1000);
+    storageL.setItem('ThisSelYueJian', ThisYueJianSel.value, 1000);
+    storageL.setItem('ThisSelMonth', ThisMonthSel.value, 1000);
+    storageL.setItem('ThisSelDay', ThisDaySel.value, 1000);
+}
 function yearChangeSelChange() {
-    let yearChangeNum = parseInt(YearChangeSel.value - 0);
-    let yearNum = parseInt(ThisYearSel.value) + yearChangeNum + 0;
-    //var thisYearCtrlTemp = document.getElementById("ThisYearText");
-    //thisYearCtrlTemp.value = Ayear2year(changeNum);
-    console.log('yearChangeSelChange()年数值:' + yearNum + '/改变了：' + yearChangeNum);
-    //ThisYearText.value = Ayear2year(yearNum);
-    yearChange(yearNum);
+    let yChangeNum = parseInt(YearChangeSel.value);
+    let yNum = parseInt(ThisYearSel.value) + yChangeNum + 0;
+    yearChange(yNum);
+    console.log('yearChangeSelChange()年数值:' + yNum + '/改变了：' + yChangeNum);
+    YearChangeSel.value = 0;
 }
-//跳到上(或下)下月，0：向前减一个月，1：向后减一个月，2：现在时刻的月份
 function monthChange(ud) {
     let yearNumTemp = parseInt(year2Ayear(ThisYearText.value));
     ;
     let monthNumTemp = parseInt(ThisMonthSel.value);
-    //0：向前减一个月，1：向后减一个月，2：回到现在时刻的月份
     if (ud == 0) {
         if (monthNumTemp <= 1 && yearNumTemp <= -10000) {
             alert('已经超过了公元前10000年，到顶了！');
@@ -105,143 +106,148 @@ function monthChange(ud) {
     else if (ud == 2) {
         set_date_screen(2);
     }
-    getLunarMonthPG(parseInt(yearNumTemp), parseInt(ThisMonthSel.value)); //不确定是否正确
+    MC_getLunarMonthPG(parseInt(yearNumTemp), parseInt(ThisMonthSel.value));
+    storageThisDate();
 }
-//月份改变选择按钮变化时
 function monthChangeSelChange() {
+    let mChangeNum = parseInt(MonthChangeSel.value);
+    console.log('monthChangeSelChange()/改变了：' + mChangeNum);
+    MonthChangeSel.value = 0;
 }
-//日期改变选择按钮变化时
 function dayChangeSelChange() {
+    let dChangeNum = parseInt(DayChangeSel.value);
+    console.log('dayChangeSelChange()/改变了：' + dChangeNum);
+    DayChangeSel.value = 0;
+    storageThisDate();
 }
-//时辰改变选择按钮变化时
 function timeChangeSelChange() {
 }
-//显示时钟,传入日期对象
 function clockShowConversion(dateTimeObj) {
     let h = RegionSel.v - 0;
     let rg = '';
     let v = RegionSel.rg;
-    let jdFrom2K = dateTimeObj / 86400000 - 10957.5 + h / 24; //J2000起算的儒略日数(当地时间)
+    let jdFrom2K = dateTimeObj / 86400000 - 10957.5 + h / 24;
     LocalClockArea.innerHTML = dateTimeObj.toLocaleString2() + "(" + (-dateTimeObj.getTimezoneOffset() / 60.0).toFixed(1) + "TZ)";
     ;
     if (v) {
         let year1 = JD.Year;
-        //console.log("clockShowConversion()JD.Year:"+JD.Year);
-        let year2 = year1; //该时所在年份
+        let year2 = year1;
         let month1 = v.slice(0, 2) - 0;
         let month2 = v.slice(5, 5 + 2) - 0;
         if (month2 < month1)
             year2++;
-        //getJD4Week(y,m,n,w)求y年m月第n个星期w的jd
         let J1 = JD.getJD4Week(year1, month1, v.slice(2, 2 + 1), v.slice(3, 3 + 1) - 0) - 0.5 - J2000 + (v.charCodeAt(4) - 97) / 24;
         let J2 = JD.getJD4Week(year2, month2, v.slice(7, 7 + 1), v.slice(8, 8 + 1) - 0) - 0.5 - J2000 + (v.charCodeAt(9) - 97) / 24;
         if (jdFrom2K >= J1 && jdFrom2K < J2)
-            jdFrom2K += 1 / 24, rg = '<font color=#FF0000>¤</font>'; //夏令时
+            jdFrom2K += 1 / 24, rg = '<font color=#FF0000>¤</font>';
     }
     JD.setJD2YMD(jdFrom2K + J2000);
-    SelRegionClock.innerHTML = '[' + JD.Day + '日 ' + JD.Hour + ':' + JD.Min + ':' + int2(JD.Sec) + rg + ']'; //为了与LocalClockArea同步,秒数取整而不四舍五入
+    SelRegionClock.innerHTML = '[' + JD.Day + '日 ' + JD.Hour + ':' + JD.Min + ':' + int2(JD.Sec) + rg + ']';
 }
-/****************
-地理经纬度选择的页面控制函数
-****************/
 function citySelChange() {
     let i;
-    //latitude and longitude 经纬度
     let latLongValue = new LongLatDecode(CitySel.options[CitySel.selectedIndex].value);
-    CitySel.Long = latLongValue.Long; //经度
-    CitySel.Lat = latLongValue.Lat; //纬度
-    /*
-    Cb_J.value=(latLongValue.Long/Math.PI*180).toFixed(6), Cb_W.value=(latLongValue.Lat/Math.PI*180).toFixed(6);
-    Cf_J.value = Cd_J.value = Cp9_J.value = Cb_J.value;
-    Cf_W.value = Cd_W.value = Cp9_W.value = Cb_W.value;
-    */
+    CitySel.Long = latLongValue.Long;
+    CitySel.Lat = latLongValue.Lat;
+    let stateSelId = document.getElementById("StateSel");
+    let citySelId = document.getElementById("CitySel");
     curSeltLong = (latLongValue.Long * 180.0 / Math.PI);
     curSeltLat = (latLongValue.Lat * 180.0 / Math.PI);
     LongSelText.value = curSeltLong;
     LatSelText.value = curSeltLat;
-    thisDayInfoShow(-2);
-    storageL.setItem('StateSel', StateSel.selectedIndex, 1000);
-    storageL.setItem('CitySel', CitySel.selectedIndex, 1000);
+    MC_thisDayInfoShow(-2);
+    storageL.setItem('StateSelNo', StateSel.selectedIndex, 1000);
+    storageL.setItem('StateSelName', stateSelId.options[StateSel.selectedIndex].text, 1000);
+    storageL.setItem('CitySelNo', CitySel.selectedIndex, 1000);
+    storageL.setItem('CitySelName', citySelId.options[CitySel.selectedIndex].text, 1000);
+    storageL.setItem('CruCityLong', curSeltLong, 1000);
+    storageL.setItem('CruCityLat', curSeltLat, 1000);
 }
-//省份选择控件变化时
 function stateSelChange() {
     CitySel.length = 0;
     let ob = Long_Lat_ChineseCityArr[StateSel.options[StateSel.selectedIndex].value - 0];
     for (let i = 1; i < ob.length; i++)
-        addOp(CitySel, ob[i].slice(0, 4), ob[i].slice(4, ob[i].length));
+        addSelectOption(CitySel, ob[i].slice(0, 4), ob[i].slice(4, ob[i].length));
     citySelChange();
 }
-//时区输入的时候
 function longSelTextIn() {
     console.log("longSelTextIn()输入为：" + LongSelText.value);
     curSeltLong = Number(LongSelText.value);
 }
-//时区输入的时候
 function latSelTextIn() {
     console.log("latSelTextIn()输入为：" + LatSelText.value);
     curSeltLat = Number(LatSelText.value);
 }
-//tab下級頁面的顯示函數
-function thisTabPageShow(tabPageName, seltTabNo) {
+function thisTabPageShow(tabPageURL = "month_calendar.htm", seltTabNo = 4, tabPageName = "月曆表") {
     let tabCon = document.getElementById('funTabCon');
     let btns = document.getElementById('funTabTit').getElementsByTagName('span');
     funTabPGNo_Selt = seltTabNo - 1;
-    //this.className = 'select';
-    for (var i = 0; i < btns.length; i++) {
+    for (let i = 0; i < btns.length; i++) {
         btns[i].className = '';
     }
     ;
     btns[funTabPGNo_Selt].className = 'select';
-    tabCon.src = tabPageName;
-    //tabCon.srcdoc = tabPageName;
+    tabCon.src = tabPageURL;
+    storageL.setItem('OpenSubPageURL', tabPageURL, 1000);
+    storageL.setItem('OpenSubPageName', tabPageName, 1000);
+    storageL.setItem('OpenSubPageNo', seltTabNo, 1000);
 }
-//页面、对象、控件等的初始化
 function pageObjectInit() {
-    //console.log("pageObjectInit()全局定义函数中：" + yinFu.getName() +'/'+ yinFu.getNo()  +'/'+ yinFu.getIsYang() );
-    //console.log("pageObjectInit()全局定义函数中：" + muXing.getBSName() +'/'+ muXing.getBSNo());
     ThisTitle.innerHTML = softwareName + verStr;
     SoftwareVerNameArea.innerHTML = softwareVerName;
-    //时区的初始化
+    let item1 = storageL.getItem('StateSelNo');
+    let item2 = storageL.getItem('CitySelNo');
+    let item3 = storageL.getItem('continentSelNo');
+    let item4 = storageL.getItem('regionSelNo');
+    let item5 = storageL.getItem('OpenSubPageURL');
+    let item6 = storageL.getItem('OpenSubPageNo');
+    let item7 = storageL.getItem('OpenSubPageName');
+    if (item1 == null) {
+        item1 = "0";
+        item2 = "1";
+    }
+    if (item3 == null) {
+        item3 = "0";
+        item4 = "1";
+    }
+    if (item5 == null) {
+        item5 = "month_calendar.htm";
+        item6 = "4";
+        item7 = "月曆表";
+    }
     for (let i = 0; i < GlobalTimeZoneArr.length; i++)
-        addOp(document.all.ContinentSel, i, GlobalTimeZoneArr[i][0]);
+        addSelectOption(ContinentSel, i, GlobalTimeZoneArr[i][0]);
+    ContinentSel.selectedIndex = item3;
     continentSelChange();
+    RegionSel.selectedIndex = item4;
+    regionSelChange();
     for (let i = 0; i < Long_Lat_ChineseCityArr.length; i++)
-        addOp(document.all.StateSel, i, Long_Lat_ChineseCityArr[i][0]);
-    var seI1 = storageL.getItem('StateSel');
-    var seI2 = storageL.getItem('CitySel');
-    StateSel.selectedIndex = seI1;
-    stateSelChange(); //省份改变
-    CitySel.selectedIndex = seI2;
-    citySelChange(); //城市改变
-    var tu3_buff = 0;
-    tick(); //触发时钟
+        addSelectOption(StateSel, i, Long_Lat_ChineseCityArr[i][0]);
+    StateSel.selectedIndex = item1;
+    stateSelChange();
+    CitySel.selectedIndex = item2;
+    citySelChange();
+    let tu3_buff = 0;
+    thisTabPageShow(item5, Number(item6), item7);
+    tick();
     set_date_screen(0);
-    tick(); //触发时钟
-    //调用月历页面生成函数
-    //getLunarMonthPG(parseInt(ThisYearSel.value),parseInt(ThisMonthSel.value));
+    tick();
 }
-//年的选择定了之后，全部要执行这个选项
 function thisYearIsOK() {
     let thisYearTemp = parseInt(year2Ayear(ThisYearText.value));
     thisYearSelInit(thisYearTemp);
     console.log("thisYearIsOK()输入的年：" + thisYearTemp + "/年选择按钮：" + ThisYearSel.value);
-    getLunarMonthPG(thisYearTemp, parseInt(ThisMonthSel.value));
+    MC_getLunarMonthPG(thisYearTemp, parseInt(ThisMonthSel.value));
 }
-//生成年选择按钮控件的相关项
 function thisYearSelInit(thisYear) {
-    let selectAllNum = 61; //可以增加多少条目
+    let selectAllNum = 61;
     let selCtrlTemp = document.getElementById("ThisYearSel");
     let selCtrlLength = selCtrlTemp.length;
     let loopNum = 0;
     let thisSelNum = 0;
-    //先删除已有条目，必须从最大的删除
-    for (var i = 0; i <= selCtrlLength; i++) {
+    for (let i = 0; i <= selCtrlLength; i++) {
         selCtrlTemp.remove(selCtrlLength - i);
     }
-    /*
-    selCtrlLength = selCtrlTemp.length;
-    console.log('年选择按钮的条目长度为：' + selCtrlLength);
-    */
     for (let i = 0; i <= selectAllNum; i++) {
         let optionTemp = document.createElement("option");
         loopNum = thisYear + i - parseInt(selectAllNum / 2 - 0);
@@ -254,65 +260,49 @@ function thisYearSelInit(thisYear) {
         optionTemp.value = loopNum.toString();
         selCtrlTemp.add(optionTemp);
     }
-    /*
-    console.log('年选择按钮的条目长度为：' + selCtrlTemp.length);
-    loopNum = selCtrlTemp.length;
-    */
     for (let i = 0; i <= selCtrlTemp.length; i++) {
-        selCtrlTemp.selectedIndex = i.toString(); //设置当前选项
+        selCtrlTemp.selectedIndex = i.toString();
         if (thisYear == selCtrlTemp.value) {
-            //console.log(thisYear +'/'+i +'/'+ selCtrlTemp.value + '/' + selCtrlTemp.length);
             return;
         }
     }
 }
-//年份选择按钮项目变化时
 function thisYearSelChange() {
     let yearNum = ThisYearSel.value - 0;
     ThisYearText.value = Ayear2year(yearNum);
     console.log('thisYearSelChange()年:' + yearNum);
     yearChange(yearNum);
+    storageThisDate();
 }
-//月历页面的月份选择按钮变化时
 function thisMonthSelChange() {
     console.log('thisMonthSelChange()年:' + ThisYearSel.value + "/" + ThisMonthSel.value);
-    getLunarMonthPG(parseInt(ThisYearSel.value), parseInt(ThisMonthSel.value));
+    MC_getLunarMonthPG(parseInt(ThisYearSel.value), parseInt(ThisMonthSel.value));
+    storageThisDate();
 }
-//月历页面的日期选择按钮变化时
 function thisDaySelChange() {
+    storageL.setItem('ThisSelDay', ThisDaySel.value, 1000);
 }
-/**********************
-时钟1秒定时
-**********************/
-//即时坐标计算
 function tick() {
     let nowDate = new Date();
+    let item5 = storageL.getItem('OpenSubPageURL');
+    let item6 = storageL.getItem('OpenSubPageNo');
+    let item7 = storageL.getItem('OpenSubPageName');
+    curShowPGLB.innerHTML = item6 + "号【" + item7 + "】页";
     clockShowConversion(nowDate);
-    //zb_calc();
-    window.setTimeout("tick()", 2000);
+    window.setTimeout("tick()", 1000);
 }
-/********************
-当前时间初始化,在屏幕上显示时间、保存本地时区信息等
-*********************/
-//把当前时间置于屏幕的便入框之中
 function set_date_screen(fw) {
     let nowTime = new Date();
-    curTimeZone = -nowTime.getTimezoneOffset() / 60.0; //时区：+8为北京时；返回 UTC 时间与本地时间之间的时差，以分钟为单位。
-    curRegionJD_2K = nowTime / 86400000 - 10957.5 - curTimeZone / 24; //J2000起算的儒略日数(当前本地时间)
+    curTimeZone = -nowTime.getTimezoneOffset() / 60.0;
+    curRegionJD_2K = nowTime / 86400000 - 10957.5 - curTimeZone / 24;
     JD.setJD2YMD(curRegionJD_2K + J2000);
-    //console.log("set_date_screen(fw)本地时间："+ Date().toString() +'/时区为：' + curTimeZone);
     if (!fw || fw == 1) {
-        //MLTimeInText.value = JD.h+':'+JD.m+':'+JD.s.toFixed(0);
-        //MLTimeInText.value = nowTime.getHours()+':'+nowTime.getMinutes()+':'+nowTime.getSeconds();
-        //mlTimeInText();
     }
     if (!fw || fw == 2) {
         ThisYearText.value = nowTime.getFullYear();
         ThisMonthSel.value = nowTime.getMonth() + 1;
         ThisDaySel.value = nowTime.getDate();
         thisYearSelInit(year2Ayear(ThisYearText.value));
-        //Cal_m.value = JD.Month;
-        //ThisMonthSel.value  = JD.Month;
     }
     curRegionJD_2K = int2(curRegionJD_2K + 0.5);
     curSeltTimeZone = TimeZoneText.value;
@@ -320,9 +310,7 @@ function set_date_screen(fw) {
     curSeltLat = LatSelText.value;
     curSeltDST = CB_DST.checked;
 }
-//显时本月第n日的摘要信息。调用前应先执月历页面生成，产生有效的lun对象
-function thisDayInfoShow(thisDayNum) {
+function MC_thisDayInfoShow(thisDayNum) {
 }
-//月历页面生成
-function getLunarMonthPG(yearNum, monthNum) {
+function MC_getLunarMonthPG(yearNum, monthNum) {
 }

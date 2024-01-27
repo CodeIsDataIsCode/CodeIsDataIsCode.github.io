@@ -26,9 +26,9 @@
 		<script src=./JS/lunar_Fun.js></script>	<!--	日历物件、农历核心模块	-->
 		<script src=./JS/GEOInfo.js></script>	<!--	全国城市经纬数据库及皇帝纪年数据库	-->
 
-		<script src=./JS/yinYangSystemInfo.js></script><!--	阴阳五行系统相关函数	-->
+		<script src=./JS/wuXingGanZhiSystem.js></script><!--	阴阳五行系统相关函数	-->
 		<script src=./JS/sanYuanJiuYunInfo.js></script><!--	三元九运系统相关函数	-->
-	
+		<script src=./JS/yinYang64Gua.js></script><!--	64卦和皇极经世系统相关函数	-->
 
 		<script src=./JS/month_calendarPG.js></script>	<!--	首頁顯示相關的	-->
 		
@@ -36,31 +36,68 @@
 
 <body  class="headStyle">
 
-	<div>
-		<input id=MC_ThisYearText type=text size=4 value=2020>年
-		<input id=MC_ThisMonthText type=text size=2 value=2>月
-		<input id=MC_ThisDayText type=text size=2 value=2>日&nbsp;/&nbsp;
+		<!--工具页面显示--><!--儒略日的计算-->
+		<input type=button onclick="MC_thisPageShow(1)" value="月 历">
+		<input type=button onclick="MC_thisPageShow(2)" value="年 历">
+		<input type=button onclick="MC_thisPageShow(3)" value="三元九运">
+		<input type=button onclick="MC_thisPageShow(4)" value="皇极经世"><hr>
+
+	<div id=MC_DateSel style="display:''">
+		<select id=MC_CalendarSel onchange="">
+			<option value=1 selected>格里历:公元</option>
+			<option value=2>中国农历</option>
+			<option value=3>儒略历:公元</option>
+			<option value=4>基督公元混合</option>
+			<option value=5>回历</option>
+			<option value=6>历</option>
+			<option value=7>历</option>
+			<option value=8>历</option>
+			<option value=9>历</option>
+			<option value=10>历</option>
+		</select>&nbsp;
+		<input id=MC_ThisYearText type=text size=2 value=2020>年
+		<select id=MC_MonthLeapSel onchange="">
+			<option value=0 selected>不润月</option>
+			<option value=1>润月</option>
+		</select>&nbsp;
+		<select id=MC_YueJianSel1 onchange="">
+			<option value=1>建子</option>
+			<option value=2>建丑</option>
+			<option value=3 selected>建寅</option>
+		</select>&nbsp;
+		<input id=MC_ThisMonthText type=text size=1 value=2>月
+		<input id=MC_ThisDayText type=text size=1 value=2>日&nbsp;&nbsp;
 		<!--经度纬度-->
 		经度:&nbsp;<input type=text id=MC_LongSelText size=6 value="116.3833" oninput="">&nbsp;
 		纬度:&nbsp;<input type=text id=MC_LatSelText size=6 value="39.9000" oninput="">&nbsp;
-		時區:&nbsp;<input type=text id=MC_TimeZoneText size=6 value="8.1" oninput="">&nbsp;
+		時區:&nbsp;<input type=text id=MC_TimeZoneText size=2 value="8.1" oninput="">&nbsp;
+		<input type=button value='刷  新' onclick='MC_refreshDate()'>&nbsp;
+
+		<input id=MC_ItemNumText type=text size=2 value=25>个
 	</div><hr>
 
+
 	<!--月历表主页--> <!--控制是否显示的：style="display:inline"   display:block-->
-	<table id=MonthCalendarPGTB1 width="100%" height=40 border="0"  style="display:''" class=bd1 cellpadding=0 cellspacing=0>
+	<div id=MC_MonthCalendarDiv  style="display:">
+	<table id=MC_mainTB1 width="100%" height=30 border="0"  style="display:''" class=bd1 cellpadding=0 cellspacing=0>
 		<!--显示月历信息-->
-		<tr id="MonthCalendarPGRow1" height=40 class="monthCalendarPGJiYuanInfo">
+		<tr id="MC_mainTBRow1" height=30 class="monthCalendarPGJiYuanInfo">
 			<td width="100%" colspan="8">
-				<span id="MonthCalendarTitle" class="monthCalendarPGJiYuanInfo">月历信息头</span>
+				<span id="MC_MCTitleRow" class="monthCalendarPGJiYuanInfo">月历信息头</span>
 			</td>
 		</tr>
-		<tr id=MonthCalendarPGRow2 height=40  class="monthCalendarPGJiYuanInfo">
+		<tr id=MC_mainTBRow2 height=30  class="monthCalendarPGJiYuanInfo">
 			<td width="100%" colspan="8">
-				<span id="MonthCalendarYuanYunInfo" class="monthCalendarPGJiYuanInfo">皇极经世、三元九运等信息</span>
+				<span id="MC_MCYuanYunInfoRow" class="monthCalendarPGJiYuanInfo">三元九运信息</span>
 			</td>
 		</tr>
-		<tr id="MonthCalendarPGRow2" align="center" height=30	style="font-size: 14px; color: #000000;background-color: #bdd9e4;font-weight:bold">
-			<td width="5.5%" style="background-color: #eeeeee;">周数</td>
+		<tr id=MC_mainTBRow3 height=30  class="monthCalendarPGJiYuanInfo">
+			<td width="100%" colspan="8">
+				<span id="MC_MC64GuaInfoRow" class="monthCalendarPGJiYuanInfo">皇极经世信息</span>
+			</td>
+		</tr>
+		<tr id="MC_mainTBRow11" align="center" height=30	style="font-size: 14px; color: #000000;background-color: #bdd9e4;font-weight:bold">
+			<td width="5.5%" style="background-color: #3ab678;">周数</td>
 			<td width="13.5%" style="color: #ff0000;">日</td>
 			<td width="13.5%">一</td>
 			<td width="13.5%">二</td>
@@ -69,114 +106,153 @@
 			<td width="13.5%">五</td>
 			<td width="13.5%" style="color: #ff0000;">六</td>
 		</tr>
-		<tr id="MonthCalendarPGRow3" align="center" height=60>
+		<tr id="MC_mainTBRow12 align="center" height=60>
 			<td id="MC_Week1" style="background-color: #eeeeee;">11</td>
-			<td id="MC_Day1" onmouseover="thisDayInfoShow1(0)" ondblclick="thisMonthDBChang(0)" style="color: #ff0000;">12	</td>
-			<td id="MC_Day2" onmouseover="thisDayInfoShow1(1)" ondblclick="thisMonthDBChang(1)">13</td>
-			<td id="MC_Day3" onmouseover="thisDayInfoShow1(2)" ondblclick="thisMonthDBChang(2)">14</td>
-			<td id="MC_Day4" onmouseover="thisDayInfoShow1(3)" ondblclick="thisMonthDBChang(3)">15</td>
-			<td id="MC_Day5" onmouseover="thisDayInfoShow1(4)" ondblclick="thisMonthDBChang(4)">16</td>
-			<td id="MC_Day6" onmouseover="thisDayInfoShow1(5)" ondblclick="thisMonthDBChang(5)">17</td>
-			<td id="MC_Day7" onmouseover="thisDayInfoShow1(6)" ondblclick="thisMonthDBChang(6)" style="color: #ff0000;">18
+			<td id="MC_Day1" onmouseover="MC_thisDayInfoShow1(0)" ondblclick="MC_thisMonthDBChang(0)" style="color: #ff0000;">12	</td>
+			<td id="MC_Day2" onmouseover="MC_thisDayInfoShow1(1)" ondblclick="MC_thisMonthDBChang(1)">13</td>
+			<td id="MC_Day3" onmouseover="MC_thisDayInfoShow1(2)" ondblclick="MC_thisMonthDBChang(2)">14</td>
+			<td id="MC_Day4" onmouseover="MC_thisDayInfoShow1(3)" ondblclick="MC_thisMonthDBChang(3)">15</td>
+			<td id="MC_Day5" onmouseover="MC_thisDayInfoShow1(4)" ondblclick="MC_thisMonthDBChang(4)">16</td>
+			<td id="MC_Day6" onmouseover="MC_thisDayInfoShow1(5)" ondblclick="MC_thisMonthDBChang(5)">17</td>
+			<td id="MC_Day7" onmouseover="MC_thisDayInfoShow1(6)" ondblclick="MC_thisMonthDBChang(6)" style="color: #ff0000;">18
 			</td>
 		</tr>
-		<tr id="MonthCalendarPGRow4" align="center" height=60>
+		<tr id="MC_mainTBRow13" align="center" height=60>
 			<td id="MC_Week2" style="background-color: #eeeeee;">21</td>
-			<td id="MC_Day8" onmouseover="thisDayInfoShow1(7)" ondblclick="thisMonthDBChang(7)" style="color: #ff0000;">22</td>
-			<td id="MC_Day9" onmouseover="thisDayInfoShow1(8)" ondblclick="thisMonthDBChang(8)">23</td>
-			<td id="MC_Day10" onmouseover="thisDayInfoShow1(9)" ondblclick="thisMonthDBChang(9)">24</td>
-			<td id="MC_Day11" onmouseover="thisDayInfoShow1(10)" ondblclick="thisMonthDBChang(10)">25</td>
-			<td id="MC_Day12" onmouseover="thisDayInfoShow1(11)" ondblclick="thisMonthDBChang(11)">26</td>
-			<td id="MC_Day13" onmouseover="thisDayInfoShow1(12)" ondblclick="thisMonthDBChang(12)">27</td>
-			<td id="MC_Day14" onmouseover="thisDayInfoShow1(13)" ondblclick="thisMonthDBChang(13)" style="color: #ff0000;">28</td>
+			<td id="MC_Day8" onmouseover="MC_thisDayInfoShow1(7)" ondblclick="MC_thisMonthDBChang(7)" style="color: #ff0000;">22</td>
+			<td id="MC_Day9" onmouseover="MC_thisDayInfoShow1(8)" ondblclick="MC_thisMonthDBChang(8)">23</td>
+			<td id="MC_Day10" onmouseover="MC_thisDayInfoShow1(9)" ondblclick="MC_thisMonthDBChang(9)">24</td>
+			<td id="MC_Day11" onmouseover="MC_thisDayInfoShow1(10)" ondblclick="MC_thisMonthDBChang(10)">25</td>
+			<td id="MC_Day12" onmouseover="MC_thisDayInfoShow1(11)" ondblclick="MC_thisMonthDBChang(11)">26</td>
+			<td id="MC_Day13" onmouseover="MC_thisDayInfoShow1(12)" ondblclick="MC_thisMonthDBChang(12)">27</td>
+			<td id="MC_Day14" onmouseover="MC_thisDayInfoShow1(13)" ondblclick="MC_thisMonthDBChang(13)" style="color: #ff0000;">28</td>
 		</tr>
-		<tr id="MonthCalendarPGRow5" align="center" height=60>
+		<tr id="MC_mainTBRow14" align="center" height=60>
 			<td id="MC_Week3" style="background-color:#eeeeee;">31</td>
-			<td id="MC_Day15" onmouseover="thisDayInfoShow1(14)" ondblclick="thisMonthDBChang(14)" style="color: #ff0000;">32</td>
-			<td id="MC_Day16" onmouseover="thisDayInfoShow1(15)" ondblclick="thisMonthDBChang(15)">33</td>
-			<td id="MC_Day17" onmouseover="thisDayInfoShow1(16)" ondblclick="thisMonthDBChang(16)">34</td>
-			<td id="MC_Day18" onmouseover="thisDayInfoShow1(17)" ondblclick="thisMonthDBChang(17)">35</td>
-			<td id="MC_Day19" onmouseover="thisDayInfoShow1(18)" ondblclick="thisMonthDBChang(18)">36</td>
-			<td id="MC_Day20" onmouseover="thisDayInfoShow1(19)" ondblclick="thisMonthDBChang(19)">37</td>
-			<td id="MC_Day21" onmouseover="thisDayInfoShow1(20)" ondblclick="thisMonthDBChang(20)" style="color: #ff0000;">38</td>
+			<td id="MC_Day15" onmouseover="MC_thisDayInfoShow1(14)" ondblclick="MC_thisMonthDBChang(14)" style="color: #ff0000;">32</td>
+			<td id="MC_Day16" onmouseover="MC_thisDayInfoShow1(15)" ondblclick="MC_thisMonthDBChang(15)">33</td>
+			<td id="MC_Day17" onmouseover="MC_thisDayInfoShow1(16)" ondblclick="MC_thisMonthDBChang(16)">34</td>
+			<td id="MC_Day18" onmouseover="MC_thisDayInfoShow1(17)" ondblclick="MC_thisMonthDBChang(17)">35</td>
+			<td id="MC_Day19" onmouseover="MC_thisDayInfoShow1(18)" ondblclick="MC_thisMonthDBChang(18)">36</td>
+			<td id="MC_Day20" onmouseover="MC_thisDayInfoShow1(19)" ondblclick="MC_thisMonthDBChang(19)">37</td>
+			<td id="MC_Day21" onmouseover="MC_thisDayInfoShow1(20)" ondblclick="MC_thisMonthDBChang(20)" style="color: #ff0000;">38</td>
 		</tr>
-		<tr id="MonthCalendarPGRow6" align="center" height=60>
+		<tr id="MC_mainTBRow15" align="center" height=60>
 			<td id="MC_Week4" style="background-color: #eeeeee;">41</td>
-			<td id="MC_Day22" onmouseover="thisDayInfoShow1(21)" ondblclick="thisMonthDBChang(21)" style="color: #ff0000;">42</td>
-			<td id="MC_Day23" onmouseover="thisDayInfoShow1(22)" ondblclick="thisMonthDBChang(22)">43</td>
-			<td id="MC_Day24" onmouseover="thisDayInfoShow1(23)" ondblclick="thisMonthDBChang(23)">44</td>
-			<td id="MC_Day25" onmouseover="thisDayInfoShow1(24)" ondblclick="thisMonthDBChang(24)">45</td>
-			<td id="MC_Day26" onmouseover="thisDayInfoShow1(25)" ondblclick="thisMonthDBChang(25)">46</td>
-			<td id="MC_Day27" onmouseover="thisDayInfoShow1(26)" ondblclick="thisMonthDBChang(26)">47</td>
-			<td id="MC_Day28" onmouseover="thisDayInfoShow1(27)" ondblclick="thisMonthDBChang(27)" style="color: #ff0000;">48</td>
+			<td id="MC_Day22" onmouseover="MC_thisDayInfoShow1(21)" ondblclick="MC_thisMonthDBChang(21)" style="color: #ff0000;">42</td>
+			<td id="MC_Day23" onmouseover="MC_thisDayInfoShow1(22)" ondblclick="MC_thisMonthDBChang(22)">43</td>
+			<td id="MC_Day24" onmouseover="MC_thisDayInfoShow1(23)" ondblclick="MC_thisMonthDBChang(23)">44</td>
+			<td id="MC_Day25" onmouseover="MC_thisDayInfoShow1(24)" ondblclick="MC_thisMonthDBChang(24)">45</td>
+			<td id="MC_Day26" onmouseover="MC_thisDayInfoShow1(25)" ondblclick="MC_thisMonthDBChang(25)">46</td>
+			<td id="MC_Day27" onmouseover="MC_thisDayInfoShow1(26)" ondblclick="MC_thisMonthDBChang(26)">47</td>
+			<td id="MC_Day28" onmouseover="MC_thisDayInfoShow1(27)" ondblclick="MC_thisMonthDBChang(27)" style="color: #ff0000;">48</td>
 		</tr>
-		<tr id="MonthCalendarPGRow7" align="center" height=60>
+		<tr id="MC_mainTBRow16" align="center" height=60>
 			<td id="MC_Week5" style="background-color: #eeeeee;">51</td>
-			<td id="MC_Day29" onmouseover="thisDayInfoShow1(28)" ondblclick="thisMonthDBChang(28)" style="color: #ff0000;">52</td>
-			<td id="MC_Day30" onmouseover="thisDayInfoShow1(29)" ondblclick="thisMonthDBChang(29)">53</td>
-			<td id="MC_Day31" onmouseover="thisDayInfoShow1(30)" ondblclick="thisMonthDBChang(30)">54</td>
-			<td id="MC_Day32" onmouseover="thisDayInfoShow1(31)" ondblclick="thisMonthDBChang(31)">55</td>
-			<td id="MC_Day33" onmouseover="thisDayInfoShow1(32)" ondblclick="thisMonthDBChang(32)">56</td>
-			<td id="MC_Day34" onmouseover="thisDayInfoShow1(33)" ondblclick="thisMonthDBChang(33)">57</td>
-			<td id="MC_Day35" onmouseover="thisDayInfoShow1(34)" ondblclick="thisMonthDBChang(34)" style="color: #ff0000;">58</td>
+			<td id="MC_Day29" onmouseover="MC_thisDayInfoShow1(28)" ondblclick="MC_thisMonthDBChang(28)" style="color: #ff0000;">52</td>
+			<td id="MC_Day30" onmouseover="MC_thisDayInfoShow1(29)" ondblclick="MC_thisMonthDBChang(29)">53</td>
+			<td id="MC_Day31" onmouseover="MC_thisDayInfoShow1(30)" ondblclick="MC_thisMonthDBChang(30)">54</td>
+			<td id="MC_Day32" onmouseover="MC_thisDayInfoShow1(31)" ondblclick="MC_thisMonthDBChang(31)">55</td>
+			<td id="MC_Day33" onmouseover="MC_thisDayInfoShow1(32)" ondblclick="MC_thisMonthDBChang(32)">56</td>
+			<td id="MC_Day34" onmouseover="MC_thisDayInfoShow1(33)" ondblclick="MC_thisMonthDBChang(33)">57</td>
+			<td id="MC_Day35" onmouseover="MC_thisDayInfoShow1(34)" ondblclick="MC_thisMonthDBChang(34)" style="color: #ff0000;">58</td>
 		</tr>
-		<tr id="MonthCalendarPGRow8" align="center" height=60>
+		<tr id="MC_mainTBRow17" align="center" height=60>
 			<td id="MC_Week6" style="background-color: #eeeeee;">61</td>
-			<td id="MC_Day36" onmouseover="thisDayInfoShow1(35)" ondblclick="thisMonthDBChang(35)" style="color: #ff0000;">62</td>
-			<td id="MC_Day37" onmouseover="thisDayInfoShow1(36)" ondblclick="thisMonthDBChang(36)">63</td>
-			<td id="MC_Day38" onmouseover="thisDayInfoShow1(37)" ondblclick="thisMonthDBChang(37)">64</td>
-			<td id="MC_Day39" onmouseover="thisDayInfoShow1(38)" ondblclick="thisMonthDBChang(38)">65</td>
-			<td id="MC_Day40" onmouseover="thisDayInfoShow1(39)" ondblclick="thisMonthDBChang(39)">66</td>
-			<td id="MC_Day41" onmouseover="thisDayInfoShow1(40)" ondblclick="thisMonthDBChang(40)">67</td>
-			<td id="MC_Day42" onmouseover="thisDayInfoShow1(41)" ondblclick="thisMonthDBChang(41)" style="color: #ff0000;">68</td>
+			<td id="MC_Day36" onmouseover="MC_thisDayInfoShow1(35)" ondblclick="MC_thisMonthDBChang(35)" style="color: #ff0000;">62</td>
+			<td id="MC_Day37" onmouseover="MC_thisDayInfoShow1(36)" ondblclick="MC_thisMonthDBChang(36)">63</td>
+			<td id="MC_Day38" onmouseover="MC_thisDayInfoShow1(37)" ondblclick="MC_thisMonthDBChang(37)">64</td>
+			<td id="MC_Day39" onmouseover="MC_thisDayInfoShow1(38)" ondblclick="MC_thisMonthDBChang(38)">65</td>
+			<td id="MC_Day40" onmouseover="MC_thisDayInfoShow1(39)" ondblclick="MC_thisMonthDBChang(39)">66</td>
+			<td id="MC_Day41" onmouseover="MC_thisDayInfoShow1(40)" ondblclick="MC_thisMonthDBChang(40)">67</td>
+			<td id="MC_Day42" onmouseover="MC_thisDayInfoShow1(41)" ondblclick="MC_thisMonthDBChang(41)" style="color: #ff0000;">68</td>
 		</tr>
 	</table>
 
 	<!--显示月历的气朔、日出信息，每日的详细的历法信息<td  width="100%" >		</td>-->
-	<table id=MonthCalendarPGTB2 width="100%" border="0"  style="display:''" class=bd1>
+	<table id=MC_mainTB3 width="100%" border="0"  style="display:''" class=bd1>
 		<tr class=dTop2 height=30>
 			<td align=lift width="40%" style="background-color: #fbff00;">&nbsp;&nbsp;当日日历信息：</td>
 			<td align=lift width="33%" style="background-color: #cccccc;">&nbsp;&nbsp;当前位置下的日月出没信息：</td>
 			<td align=lift width="27%" style="background-color: #00ff00;">&nbsp;&nbsp;月相节气信息：</td>
 		</tr>
 
-		<tr id="ThisDayInfoDetailsRow">
-			<td align=center id=MonthCalThisDayInfo></td> <!--显示每日具体信息-->
-			<td align=center id=MonthCalSunRiseFallInfo style="background-color: #eeeeee;"></td><!--日月出没信息-->
-			<td align=center id=MonthCalQiShuoInfo></td> <!--月相节气信息-->
-			
+		<tr id="MC_thisDayInfoRow">
+			<td align=center id=MC_ThisDayInfo></td> <!--显示每日具体信息-->
+			<td align=center id=MC_SunRiseFallInfo style="background-color: #eeeeee;"></td><!--日月出没信息-->
+			<td align=center id=MC_QiShuoInfo></td> <!--月相节气信息-->
 		</tr>
 	</table>
 
-	<table id=MonthCalendarPGTB3 width="100%" border="1"  style="display:''" class=bd1 cellpadding=0 cellspacing=0>
+	<!--月历显示提示信息-->
+	<table id=MC_mainTB5 width="100%" border="0"  style="display:''" class=bd1 cellpadding=0 cellspacing=0>
+		<tr>
+			<td>
+				<font style='font-size:14px;color:rgb(255, 0, 0)'><b>&nbsp;&nbsp;月历提示：</b></font><br>
+				&nbsp;&nbsp;如果按住ctrl键不放，再将鼠标移出日历区，即可保持该日信息摘要不变；<br>
+				&nbsp;&nbsp;如果鼠标双击月历的空白区域，将可以跳转到上月或者下月。<br>
+				&nbsp;&nbsp;日月升降是本地时间，气朔时刻是北京时间；<br>
+				&nbsp;&nbsp;输入公元前212年方法是"B212"或"*212"或"-211"；BC4713至9999年有效,
+				<font style='font-size:14px;color:rgb(255, 0, 0)'><b><i>BC722年以后与实历相符。</i></b></font><br>
+				&nbsp;&nbsp;本程序编写于2008年-2009年,2018年做了一点改动,使之可在手机上运行。
+			</td>
+		</tr>
+	</table>
+	</div>
+
+	<!--	显示年历	-->
+	<div id=MC_YearCalendarDiv style="display:none">
+	</div>
+
+	<!--	显示三元九运	-->
+	<div id=MC_YuanYunDiv style="font-size: 12px; color:#0000FF; display:none">
+	</div>
+
+	<!--	显示皇极经世	-->
+	<div id=MC_HuangJiJingShiDiv style="font-size: 12px; color:#0000FF; display:none">
+		<div id=MC_HuangJiJingShiInfo style="font-size: 16px; color:#0000FF;"></div>
+		<hr>
+		<p style="font-size: 11px; color:#FF0000;">
+			皇极经世分为日、月、星、辰四个等级纪年周期，其类比于年、月、日、时，说明如下：<br>
+			1日（元）又称为1元，共12月（又称为12会）【用12地支和12辟卦表示】【1日（元）计129,600年】<br>
+			1月（会）又称为1会，管5个正卦（1日（元）用60正卦，规则为：用64卦中减去离卦、乾卦、坎卦、坤卦四正卦的60正卦表示），
+			每正卦有六个变卦，5正卦合计30变卦，每个变卦为1星（又称为运）【1月（会）计10,800年】<br>
+			1星（运）又称为1运，合计共12辰（世），每星（运）由每正卦的6个变卦所主，每星（运）的卦又生6个变卦，变之变卦称为中运卦【1星（运）计360年】<br>
+			1辰（世）又称为1世，1辰（世）为3个小运【1辰（世）计30年】<br>
+			****1个中运计60年，这60年每年由一个值年卦所主。<br>
+			****1个小运计10年，小运由中运之卦6变所成。<br>
+			********************************************************<br>
+			12月会每月会管10,800年【一元共12个月会，合计：129,600年】；<br>
+			60月正卦每正卦管2160年【一元共60个月会正卦】；<br>
+      360个大运每大运管360年【一元共360个星（运）】；<br>
+			2160个中运每中运管60年【一元共2,160个中运】；<br>
+			12,960个小运每小运管10年【一元共12,960个小运】<br>
+			********************************************************<br>
+			公元前2577年为皇极经世的黄帝纪元元年；为第6号月（会），第30号正卦；第180号星（运），第2149号辰（世），第1075号中运，第6445号小运。<br>
+			第7号午月会姤䷫卦，所主公元前2217年到公元8583年<br>
+			第32号月正卦大过䷛，所主公元前57年到公元2103年<br>
+			********************************************************<br>
+			友情提示：如果64卦的卦符无法正常显示，需要安装“segoe UI Symbol”这个字体。
+		</p>
+	</div>
+
+	<!--	页面初始化需要运行的函数	-->
+	<script>
+		//调用月历页面生成函数
+		//MC_getLunarMonthPG(parseInt(MC_ThisYearText.value),parseInt(MC_ThisMonthText.value));
+		MC_thisPageShow(1);
+	</script>
+
+
+<!--
+	<table id=MC_mainTB4 width="100%" border="1"  style="display:''" class=bd1 cellpadding=0 cellspacing=0>
 		<tr id=MonthCalendarPG width="100%" style="display:''">
 			<td valign=top colspan="3" cellspacing=0 cellpadding=0>
 				<div id=MonthCalOutArea></div>
 			</td>
 		</tr>
 	</table>
-
-	<!--月历显示提示信息-->
-	<table id=MonthCalendarPGTB4 width="100%" border="0"  style="display:''" class=bd1 cellpadding=0 cellspacing=0>
-		<tr>
-			<td>
-				<font color=#FF0000 font-size="10px"><b>&nbsp;&nbsp;月历提示：</b></font>如果按住ctrl键不放，再将鼠标移出日历区，即可保持该日信息摘要不变；<br>
-				&nbsp;&nbsp;如果鼠标双击月历的空白区域，将可以跳转到上月或者下月。<br>
-				&nbsp;&nbsp;日月升降是本地时间，气朔时刻是北京时间；<br>
-				&nbsp;&nbsp;输入公元前212年方法是"B212"或"*212"或"-211"；BC4713至9999年有效,<font color=#FF0000><b><i>BC722年以后与实历相符。</i></b>
-				</font><br>
-				&nbsp;&nbsp;本程序编写于2008年-2009年,2018年做了一点改动,使之可在手机上运行。
-			</td>
-		</tr>
-	</table>
-	
-	<!--	页面初始化需要运行的函数	-->
-
-	<script>
-		//调用月历页面生成函数
-		getLunarMonthPG(parseInt(MC_ThisYearText.value),parseInt(MC_ThisMonthText.value));
-	</script>
-
+-->
 
 </body>
 

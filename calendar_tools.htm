@@ -24,66 +24,249 @@
 		<script src=./JS/lunar_Fun.js></script>	<!--	日历物件、农历核心模块	-->
 		<script src=./JS/GEOInfo.js></script>	<!--	全国城市经纬数据库及皇帝纪年数据库	-->
 
-		<script src=./JS/yinYangSystemInfo.js></script><!--	阴阳五行系统相关函数	-->
+		<script src=./JS/wuXingGanZhiSystem.js></script><!--	阴阳五行系统相关函数	-->
 		<script src=./JS/sanYuanJiuYunInfo.js></script><!--	三元九运系统相关函数	-->
 	
 
 		<script src=./JS/calendar_tools_PGShow.js></script>	<!--	首頁顯示相關的	-->
-		
+		<script src=./JS/PI_Tool_Fun.js></script>	<!--	π模拟计算相关函数	-->
 
 </head>
 
 <body  class="headStyle">
 	<!--工具页面显示--><!--儒略日的计算-->
-	儒略日计算1：JD <input id=GJ1_jd type=text size=25 value="2299160.13456789123456">
-	<input type=button value="计算日期信息" onclick='JD2DateCalShow(GJ1_jd.value - 0)'>
+	<input type=button onclick="CLT_thisPageShow(1)" value="JD计算">
+	<input type=button onclick="CLT_thisPageShow(2)" value="π计算"><hr>
+
+	<div id=JD_Cal_PG style="display:">
+	JD转日期： <input id=CLT_jd1 type=text size=25 value="2299160.13456789123456">
+	<input type=button value="计算日期信息" onclick='CLT_JD2DateCalShow(CLT_jd1.value - 0)'>
 	<hr>
-	儒略日计算2：公元 <input id=GJ1_y type=text size=4 value=1582>年
-	<input id=GJ1_m type=text size=2 value=10 maxleng=2>月
-	<input id=GJ1_d type=text size=2 value=4>日
-	<input id=GJ1_t type=text size=8 value="13:01:01">
-	<input type=button value="转儒略日" onclick='Date2JDCalShow(0)'>
-	<input type=button value="减去上行" onclick='Date2JDCalShow(1)'>
-	<input type=button value="年内积日" onclick='Date2JDCalShow(2)'><br>
+	<span id=CLT_out1 style="font-size:16px;color:red">输出JD转日期信息</span>
 	<hr>
-	儒略日计算3：公元 <input id=GJ1_y2 type=text size=4 value=2000>年
-	<input id=GJ1_m2 type=text size=2 value=1 maxleng=2>月
-	<input id=GJ1_d2 type=text size=2 value=1>日
-	<input id=GJ1_t2 type=text size=8 value="9:01:23">
-	<input type=button value="两行相减" onclick='Date2JDCalShow(3)'>
+	日期1转JD：
+	<select id=CLT_CalendarSel1 onchange="">
+		<option value=1 selected>格里历:公元</option>
+		<option value=2>中国农历</option>
+		<option value=3>儒略历:公元</option>
+		<option value=4>公历混合</option>
+		<option value=5>回历</option>
+		<option value=6>历</option>
+		<option value=7>历</option>
+		<option value=8>历</option>
+		<option value=9>历</option>
+		<option value=10>历</option>
+	</select>&nbsp;
+	
+	<input id=CLT_year1 type=text size=3 value=1582>年
+	<select id=CLT_MonthLeapSel1 onchange="">
+		<option value=0 selected>不润月</option>
+		<option value=1>润月</option>
+	</select>&nbsp;
+	<select id=CLT_YueJianSel1 onchange="">
+		<option value=1>建子</option>
+		<option value=2>建丑</option>
+		<option value=3 selected>建寅</option>
+	</select>&nbsp;
+	<select id=CLT_MonthSel1 onchange="">
+		<option value=1>1/一月</option>
+		<option value=2>2/二月</option>
+		<option value=3>3/三月</option>
+		<option value=4>4/四月</option>
+		<option value=5>5/五月</option>
+		<option value=6>6/六月</option>
+		<option value=7>7/七月</option>
+		<option value=8>8/八月</option>
+		<option value=9>9/九月</option>
+		<option value=10 selected>10/十月</option>
+		<option value=11>11/十一月</option>
+		<option value=12>12/十二月</option>
+		<option value=13>13/十三月</option>
+	</select>&nbsp;
+	<select id=CLT_DaySel1 onchange="">
+		<option value=1>1日</option>
+		<option value=2>2日</option>
+		<option value=3>3日</option>
+		<option value=4>4日</option>
+		<option value=5>5日</option>
+		<option value=6>6日</option>
+		<option value=7>7日</option>
+		<option value=8>8日</option>
+		<option value=9>9日</option>
+		<option value=10>10日</option>
+		<option value=11>11日</option>
+		<option value=12>12日</option>
+		<option value=13>13日</option>
+		<option value=14>14日</option>
+		<option value=15 selected>15日</option>
+		<option value=16>16日</option>
+		<option value=17>17日</option>
+		<option value=18>18日</option>
+		<option value=19>19日</option>
+		<option value=20>20日</option>
+		<option value=21>21日</option>
+		<option value=22>22日</option>
+		<option value=23>23日</option>
+		<option value=24>24日</option>
+		<option value=25>25日</option>
+		<option value=26>26日</option>
+		<option value=27>27日</option>
+		<option value=28>28日</option>
+		<option value=29>29日</option>
+		<option value=30>30日</option>
+		<option value=31>31日</option>
+	</select>&nbsp;
+
+	<input id=CLT_time1 type=text size=5 value="13:01:01">
+	<input type=button value="计算JD信息" onclick='CLT_Date2JDInfoShow(1)'>
+	<input type=button value='刷新日期1' onclick='CLT_refreshDate(1)'>&nbsp;
 	<hr>
-	<span id=GJ1_out style="font-size:16;color:red"></span>
+	<span id=CLT_out2 style="font-size:16px;color:red">输出日期1转JD信息：转儒略日JD、年内积日、两行相减信息等</span>
 	<hr>
 
-	<table id=ToolsPGTB style="display:none">
+	日期2转JD：
+	<select id=CLT_CalendarSel2 onchange="">
+		<option value=1 selected>格里历:公元</option>
+		<option value=2>中国农历</option>
+		<option value=3>儒略历:公元</option>
+		<option value=4>公历混合</option>
+		<option value=5>回历</option>
+		<option value=6>历</option>
+		<option value=7>历</option>
+		<option value=8>历</option>
+		<option value=9>历</option>
+		<option value=10>历</option>
+	</select>&nbsp;
+	<input id=CLT_year2 type=text size=3 value=2000>年
+	<select id=CLT_MonthLeapSel2 onchange="">
+		<option value=0 selected>不润月</option>
+		<option value=1>润月</option>
+	</select>&nbsp;
+	<select id=CLT_YueJianSel2 onchange="">
+		<option value=1>建子</option>
+		<option value=2>建丑</option>
+		<option value=3 selected>建寅</option>
+	</select>&nbsp;
+	<select id=CLT_MonthSel2 onchange="">
+		<option value=-1>-1月</option>
+		<option value=1 selected>1/一月</option>
+		<option value=2>2/二月</option>
+		<option value=3>3/三月</option>
+		<option value=4>4/四月</option>
+		<option value=5>5/五月</option>
+		<option value=6>6/六月</option>
+		<option value=7>7/七月</option>
+		<option value=8>8/八月</option>
+		<option value=9>9/九月</option>
+		<option value=10>10/十月</option>
+		<option value=11>11/十一月</option>
+		<option value=12>12/十二月</option>
+		<option value=13>13/十三月</option>
+	</select>&nbsp;
+	<select id=CLT_DaySel2 onchange="">
+		<option value=-1>-1日</option>
+		<option value=1 selected>1日</option>
+		<option value=2>2日</option>
+		<option value=3>3日</option>
+		<option value=4>4日</option>
+		<option value=5>5日</option>
+		<option value=6>6日</option>
+		<option value=7>7日</option>
+		<option value=8>8日</option>
+		<option value=9>9日</option>
+		<option value=10>10日</option>
+		<option value=11>11日</option>
+		<option value=12>12日</option>
+		<option value=13>13日</option>
+		<option value=14>14日</option>
+		<option value=15>15日</option>
+		<option value=16>16日</option>
+		<option value=17>17日</option>
+		<option value=18>18日</option>
+		<option value=19>19日</option>
+		<option value=20>20日</option>
+		<option value=21>21日</option>
+		<option value=22>22日</option>
+		<option value=23>23日</option>
+		<option value=24>24日</option>
+		<option value=25>25日</option>
+		<option value=26>26日</option>
+		<option value=27>27日</option>
+		<option value=28>28日</option>
+		<option value=29>29日</option>
+		<option value=30>30日</option>
+		<option value=31>31日</option>
+	</select>&nbsp;
+	<input id=CLT_time2 type=text size=5 value="12:01:23">
+	<input type=button value="计算JD信息" onclick='CLT_Date2JDInfoShow(2)'>
+	<input type=button value='刷新日期2' onclick='CLT_refreshDate(2)'>&nbsp;
+	<hr>
+	<span id=CLT_out3 style="font-size:16px;color:red">输出日期2转JD信息：转儒略日JD、年内积日、两行相减信息等</span>
+	<hr>
 
-		<tr id="CalJD_Row">
-			<td class=dBot2>
+	<!--儒略日相關的提示信息-->
+	<span id=''>
+		<font style='font-size:11px;color:rgb(47, 0, 255)'>
+		儒略日的提示信息：<br>
+		儒略日（Julian date）:	JDN是指由公元前4713年1月1日(-4712/1/1 12时整)【格里历：-4713/11/24】，协调世界时中午12时开始所经过的天数；<br>
+		格里曆（Gregorian calendar）開始：	将儒略历1582/104（星期四，JDN=2299160）的次日，为格里历1582年10月15日（星期五，JDN=2299161）：(儒略曆： 1582年10月04日12時00分00秒)<br>
 
+		儒略日：	JD(儒略历：-4713/1/1 12时整) = -365;【格里历：-4714/11/24，	農曆：十月十一】<br>
+		儒略日：	JD(儒略历：-4712/1/1 12时整) = 0;	【格里历：-4713/11/24，	農曆：十月二十二】<br>
+		儒略日：	JD(格里历：-4712/1/1 12时整) = 38;	【儒略历：-4712/2/8，	農曆：十二月初一】【格里历快38日】<br>
+		儒略日：	JD(儒略历：-4711/1/1 12时整) = 366;	【格里历：-4711/11/24，	農曆：十一月初四】<br>
+		儒略日：	JD(格里历：-4711/1/1 12时整) = 404;	【儒略历：-4711/2/8，	農曆：十二月十三】<br>
+		儒略日：	JD(儒略历：1/1/1 12时整) = 1721424;	【格里历：-0/12/30；	農曆：十一月十八】<br>
+		儒略日：	JD(格里历：1/1/1 12时整) = 1721426;	【儒略历：+1/01/03；	農曆：十一月二十】【格里历快2日】<br>
+		儒略日：	JD(儒略历：210/1/1 12时整) = 1997761;	【格里历：210/1/1；	農曆：十一月十八】<br>
+		儒略日：	JD(格里历：210/1/1 12时整) = 1997761;	【儒略历：210/1/1；	農曆：十一月二十】【格里历和儒略历同一天：200年~299年】<br>
+		儒略日：	JD(儒略历：1582/10/04 12时整)= 229160;【格里历：1582/10/14；	農曆：九月十八】<br>
+		儒略日：	JD(格里历：1582/10/15 12时整)= 229161;【儒略历：1582/10/05；	農曆：九月十九】【格里历慢10日】<br>
+		儒略日：	JD(儒略历：1582/10/15 12时整)= 229171;【格里历：1582/10/25；	農曆：九月二十九】<br>
+		儒略日：	JD(格里历：1900/1/1 12时整)  = 2451021【儒略历：1899/12/20；	農曆：十二月初一】【格里历慢12日】<br>
+		儒略日：	JD(儒略历：1900/1/1 12时整)  = 2451033【格里历：1900/01/13；	農曆：十二月十三】<br>
+		儒略日：	JD(格里历：2000/1/1 12时整)  = 2451545【儒略历：1999/12/19；	農曆：十一月二十五】【格里历慢13日】<br>
+		儒略日：	JD(儒略历：2000/1/1 12时整)  = 2451558【格里历：2000/01/14；	農曆：十二月初八】<br>
+		儒略日：	JD(格里历：2001/1/1 12时整)  = 2451911【儒略历：2000/12/19；	農曆：十二月初七】【格里历慢13日】<br>
+		儒略日：	JD(儒略历：2001/1/1 12时整)  = 2451924【格里历：2001/01/14；	農曆：十二月二十】<br>
+		儒略日：	JD(格里历：2023/12/31 12时整)= 2460310【儒略历：2023/12/18；	農曆：十一月十九】<br>
+		</font>
+	</span>
+	<hr>
+	</div>
 
-			</td>
-		</tr>
-
-		<tr id="CalPI_Row">
-			<td>-------------------------------------------------------------------------<br>
-				刘徽和祖冲之割圆法计算π：<br>
-				<input type=button value="6边C" onclick='GJ2_pi1(0)'>
-				<input type=button value="4边C" onclick='GJ2_pi1(1)'>
-				<input type=button value="6边S" onclick='GJ2_pi1(2)'>
-				<input type=button value="4边S" onclick='GJ2_pi1(3)'>
-				<input type=button value="6边快速" onclick='GJ2_pi1(4)'>
-				<input type=button value="4边快速" onclick='GJ2_pi1(5)'> &nbsp;
-				半径R：<input type=text id=GJ2_r size=15 value='1000000000'>&nbsp毫&nbsp;
-				<input type=button value="祖冲之" onclick='GJ2_pi2()'><br><br>
-				现代方法计算π：<br>
-				<input type=text id=GJ2_N size=12 maxlength=20 value='10000'>位
-				<input type=button value="现代低速算法" onclick='GJ2_pi()'>
-				<input type=button value="现代Machin公式" onclick='GJ2_machin.pi()'>
-				<input type=button value="清除计算结果" onclick='GJ2_cls()'><br><br>
-				<div id=GJ2_out></div>
-			</td>
-		</tr>
-	</table>
+	<!--以下工具，隐藏-->
+	<div id=PI_Cal_PG style="display:none">
+		<table id="">
+			<tr id="">
+				<td>
+					刘徽和祖冲之割圆法计算π：&nbsp;&#09;&nbsp;&#09;
+					<input type=button value="祖冲之" onclick='PI_GJ2_pi2()'>
+					<input type=button value="清除计算结果" onclick='PI_GJ2_cls()'>
+				</td>
+			</tr>
+			<tr id="">
+				<td>
+					<input type=button value="6边C" onclick='PI_GJ2_pi1(0)'>
+					<input type=button value="4边C" onclick='PI_GJ2_pi1(1)'>
+					<input type=button value="6边S" onclick='PI_GJ2_pi1(2)'>
+					<input type=button value="4边S" onclick='PI_GJ2_pi1(3)'>
+					<input type=button value="6边快速" onclick='PI_GJ2_pi1(4)'>
+					<input type=button value="4边快速" onclick='PI_GJ2_pi1(5)'> &nbsp;
+					半径R：
+					<input type=text id=PI_GJ2_r size=9 value='1000000000'>&nbsp;毫&nbsp;
+				</td>
+			</tr>
+			<tr id="">
+				<td>
+					现代方法计算π：<input type=text id=PI_GJ2_N size=8 maxlength=20 value='10000'>位
+					<input type=button value="现代低速算法" onclick='PI_GJ2_pi()'>
+					<input type=button value="现代Machin公式" onclick='PI_GJ2_machin.pi()'>
+				</td>
+			</tr>
+		</table>	<hr>
+		<span id=PI_Cal_out1></span>
+ 	</div>
 
 
 </body>

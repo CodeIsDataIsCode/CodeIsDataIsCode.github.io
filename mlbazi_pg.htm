@@ -26,7 +26,7 @@
 		<script src=./JS/lunar_Fun.js></script>	<!--	日历物件、农历核心模块	-->
 		<script src=./JS/GEOInfo.js></script>	<!--	全国城市经纬数据库及皇帝纪年数据库	-->
 
-		<script src=./JS/yinYangSystemInfo.js></script><!--	阴阳五行系统相关函数	-->
+		<script src=./JS/wuXingGanZhiSystem.js></script><!--	阴阳五行系统相关函数	-->
 		<script src=./JS/sanYuanJiuYunInfo.js></script><!--	三元九运系统相关函数	-->
 	
 		<script src=./JS/mlbazi_Fun.js></script>	<!--	首頁顯示相關的	-->
@@ -107,8 +107,8 @@
 			<option value=22>亥时21-23</option>
 		</select>
 
-		鎖定<input id=ML_PanDataTimeLock_Chk type=checkbox checked>
-		出生日期：<input id=ML_ThisPanDataTime type=text size=13 value='+199305121030.00' onchange="ML_ThisPanDataTimeChange()" >&nbsp;&nbsp;
+		鎖定<input id=ML_PanDateTimeLock_Chk type=checkbox checked>
+		出生日期：<input id=ML_ThisPanDateTime type=text size=13 value='+199305121030.00' onchange="ML_ThisPanDateTimeChange()" >&nbsp;&nbsp;
 		<button onclick='ML_BaZiPageShow(1)'>确定</button>
 		<button onclick='ML_BaZiPageSetTime()'>此刻</button>
 		<button onclick='ML_BaZiPageRenew()'>页面刷新</button>
@@ -135,7 +135,7 @@
 			<option value=10>癸水</option>
 		</select>
 		<input id=ML_Pan_Liu_Chk type=checkbox onclick="ML_Pan_Liu_ChkChang()">查看本盤/流年：
-		<input id=ML_ThisLiuDataTime type=text size=13 value='+202306011200.00' onchange="ML_ThisLiuDataTimeChange()" >
+		<input id=ML_ThisLiuDateTime type=text size=13 value='+202306011200.00' onchange="ML_ThisLiuDateTimeChange()" >
 	</div><hr>
 
 	<div id=ML_DebugInfoOut  class="ML_BZ_InfoInputDiv">调试信息区</div><hr>

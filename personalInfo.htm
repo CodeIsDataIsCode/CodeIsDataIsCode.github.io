@@ -17,6 +17,9 @@
 
 
 		<!--	需要调用的javascript文件	-->
+		<script src=./JS/globalVar.js></script>	<!--	 全局变量表	-->
+		<script src=./JS/tools.js></script>	<!--	页面工具函数	-->
+
 		<script src=./JS/md5.min.js></script> <!--	MD5功能庫	-->
 		<script src=./JS/dbOption.js></script> <!--	命例数据库管理	-->
 
@@ -64,7 +67,7 @@
 			<option value=3>其他</option>
 		</select>&nbsp;
 		<p>
-			日期：<input id=PI_EventTime type=text size=14 value='+199305121030.00' onchange="PI_ThisPanDataTimeChange()" >
+			日期：<input id=PI_EventTime type=text size=14 value='+199305121030.00' onchange="PI_ThisPanDateTimeChange()" >
 			<input id=PI_PregnantWeeksText type=text size=2 value='39.5' onchange="PI_PregnantWeeksTextChange()">孕周
 			事件經度:&nbsp;<input id=PI_LongSelText type=text size=2 value="120.00"  onchange="PI_LongSelTextChange()" >&nbsp;
 			緯度:&nbsp;<input id=PI_LatSelText type=text size=2 value="34.656" onchange="PI_LatSelTextChange()" >&nbsp;
@@ -142,16 +145,9 @@
 
 
 
-
-
-
-
-
-
-
 	<!--页面初始化需要运行的函数-->
 	<script id="">
-
+		//storageL.setItem('OpenSubPage',1,	1000);	//设置1000天
 	</script>
 </body>
 
